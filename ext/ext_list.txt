@@ -1,3 +1,4 @@
 1) SDL 1.2				http://www.libsdl.org/download-1.2.php
-2) Lua 5.2				http://www.lua.org/versions.html#5.2
-3) LuaBind branch by ThomasNelson	https://github.com/ThomasNelson/luabind/tree/TomN-Lua52+factories+stl
+2) Lua 5.2.0				http://www.lua.org/versions.html#5.2
+3) LuaBind branch by matsu911		https://github.com/matsu911/luabind
+4) Boost 1.53.0				http://www.boost.org/users/history/version_1_53_0.html

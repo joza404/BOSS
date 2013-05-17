@@ -41,16 +41,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SDL_HOME)include;$(LUA_HOME)include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SDL_HOME)lib\x86;$(LUA_HOME)lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SDL_HOME)include;$(LUA_HOME)include;$(BOOST_ROOT);$(LUABIND_HOME);$(IncludePath)</IncludePath>
+    <LibraryPath>$(SDL_HOME)lib\x86;$(LUA_HOME)lib;$(BOOST_ROOT);$(LUABIND_HOME)lib;$(LibraryPath)</LibraryPath>
     <IntDir>..\obj\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SDL_HOME)include;$(LUA_HOME)include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SDL_HOME)lib\x86;$(LUA_HOME)lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SDL_HOME)include;$(LUA_HOME)include;$(BOOST_ROOT);$(LUABIND_HOME);$(IncludePath)</IncludePath>
+    <LibraryPath>$(SDL_HOME)lib\x86;$(LUA_HOME)lib;$(BOOST_ROOT);$(LUABIND_HOME)lib;$(LibraryPath)</LibraryPath>
     <IntDir>..\obj\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)\bin\$(Configuration)\</OutDir>
   </PropertyGroup>
@@ -65,7 +65,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_image.lib;SDL_ttf.lib;LuaBuild.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_image.lib;SDL_ttf.lib;Lua_Build_d.lib;LuaBind_Build_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
@@ -84,11 +84,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_image.lib;SDL_ttf.lib;LuaBuild.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL.lib;SDLmain.lib;SDL_image.lib;SDL_ttf.lib;Lua_Build.lib;LuaBind_Build.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Input\Input.cpp" />
+    <ClCompile Include="Lua\Binds.cpp" />
     <ClCompile Include="Lua\Lua.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ObjectManager\ObjectManager.cpp" />
@@ -104,6 +105,7 @@
   <ItemGroup>
     <ClInclude Include="globals.h" />
     <ClInclude Include="Input\Input.h" />
+    <ClInclude Include="Lua\Binds.h" />
     <ClInclude Include="Lua\Lua.h" />
     <ClInclude Include="ObjectManager\ObjectList.h" />
     <ClInclude Include="ObjectManager\ObjectManager.h" />

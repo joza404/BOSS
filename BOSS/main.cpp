@@ -2,6 +2,7 @@
 #include <string>
 
 #include <lua.hpp>
+#include <boost\any.hpp>
 
 #include "globals.h"
 
@@ -11,6 +12,7 @@
 #include "Renderer\Renderer.h"
 #include "Lua\Lua.h"
 #include "Input\Input.h"
+#include "Lua\Binds.h"
 
 
 int main(int argc,char** argv)
@@ -25,21 +27,23 @@ int main(int argc,char** argv)
 	Lua* l = Lua::init();
 	Input* input = Input::init(l);
 
+	bind_class_input();
+
 	l->do_file(LUA_INIT_SCRIPT);
 
-	rm->load_resource("resources\\bg.info", "background");
+	rm->load_resource("..\\game\\images\\bg.info", "background");
 	r->convert_format(rm->get_resource(0));
 
-	rm->load_resource("resources\\standingboy.info", "boyup");
+	rm->load_resource("..\\game\\images\\standingboy.info", "boyup");
 	r->convert_format(rm->get_resource(1));
 	r->set_key_color(rm->get_resource(1));
 	
-	rm->load_resource("resources\\standingboy2.info", "boydown");
+	rm->load_resource("..\\game\\images\\standingboy2.info", "boydown");
 	r->convert_format(rm->get_resource(2));
 	r->set_key_color(rm->get_resource(2));
 
-	rm->load_resource("resources\\font1.info", "font1");
-	rm->load_resource("resources\\font2.info", "font2");
+	rm->load_resource("..\\game\\fonts\\font1.info", "font1");
+	rm->load_resource("..\\game\\fonts\\font2.info", "font2");
 
 	TextObject* text = (TextObject*)om->create_object(rm->get_resource("font1"), "text1");
 	text->x = 100;
@@ -58,7 +62,6 @@ int main(int argc,char** argv)
 	om->create_object(rm->get_resource("boydown"), "boydown");
 	((AO*)om->get_object("boydown"))->create_state(rm->get_resource("boyup"), "boyup");
 	r->register_object(om->get_object("boydown"), 1);
-
 
 	r->render();
 	SDL_Event event;

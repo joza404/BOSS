@@ -7,10 +7,18 @@
 Input* Input::init(Lua* lua)
 {
 	static Input singleView;
+	static bool classCreated = false;
+
+	//если класс уже создан
+	if (classCreated == true) return &singleView;
+
+	singleView.lua = lua;
 
 #ifdef _DEBUG
 	std::cout << "Input система создана." << std::endl;
 #endif
+
+	classCreated = true;
 
 	return &singleView;
 }

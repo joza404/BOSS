@@ -48,6 +48,9 @@
     <ClCompile Include="Lua\Lua.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Lua\Binds.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Input\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -96,6 +99,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="globals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\Binds.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Input\Input.h">

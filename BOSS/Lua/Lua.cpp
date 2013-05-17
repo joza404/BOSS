@@ -1,4 +1,5 @@
 #include <iostream>
+#include <luabind/luabind.hpp>
 
 #include "Lua.h"
 
@@ -15,13 +16,19 @@ Lua* Lua::init()
 	singleView.state = luaL_newstate();
     luaL_openlibs(singleView.state);
 
+	//привязываем к Luabind
+	luabind::open(singleView.state);
+
 #ifdef _DEBUG
 	std::cout << "Lua загружен." << std::endl;
 #endif
 
+	classCreated = true;
+
 	return &singleView;
 }
 
+//выполняет скрипт
 bool Lua::do_file(std::string path)
 {
 	if (this->state == nullptr)

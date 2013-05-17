@@ -9,6 +9,6 @@
 #define SCREEN_FPS 10
 
 //настройки инициализации
-#define LUA_INIT_SCRIPT "resources\\init.lua"
+#define LUA_INIT_SCRIPT "..\\game\\init.lua"
 
 #endif
