@@ -88,38 +88,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Input\Input.cpp" />
-    <ClCompile Include="Lua\Binds.cpp" />
-    <ClCompile Include="Lua\Lua.cpp" />
+    <ClCompile Include="Components\Animation\Animation.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ObjectManager\ObjectManager.cpp" />
-    <ClCompile Include="ObjectManager\Objects\AnimationObject.cpp" />
-    <ClCompile Include="ObjectManager\Objects\ImageObject.cpp" />
-    <ClCompile Include="ObjectManager\Objects\TextObject.cpp" />
-    <ClCompile Include="Renderer\Renderer.cpp" />
-    <ClCompile Include="ResourceManager\ResourceManager.cpp" />
-    <ClCompile Include="ResourceManager\Resources\AnimationResource.cpp" />
-    <ClCompile Include="ResourceManager\Resources\FontResource.cpp" />
-    <ClCompile Include="ResourceManager\Resources\ImageResource.cpp" />
+    <ClCompile Include="ResourceManager\AnimationResource.cpp" />
+    <ClCompile Include="ResourceManager\FontResource.cpp" />
+    <ClCompile Include="ResourceManager\ImageResource.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseManager.h" />
+    <ClInclude Include="BaseObject.h" />
+    <ClInclude Include="Components\Animation\Animation.h" />
+    <ClInclude Include="Components\BaseComponent.h" />
+    <ClInclude Include="Components\ComponentManager.h" />
     <ClInclude Include="globals.h" />
-    <ClInclude Include="Input\Input.h" />
-    <ClInclude Include="Lua\Binds.h" />
-    <ClInclude Include="Lua\Lua.h" />
-    <ClInclude Include="ObjectManager\ObjectList.h" />
-    <ClInclude Include="ObjectManager\ObjectManager.h" />
-    <ClInclude Include="ObjectManager\Objects\AnimationObject.h" />
-    <ClInclude Include="ObjectManager\Objects\ImageObject.h" />
-    <ClInclude Include="ObjectManager\Objects\Object.h" />
-    <ClInclude Include="ObjectManager\Objects\TextObject.h" />
-    <ClInclude Include="Renderer\Renderer.h" />
-    <ClInclude Include="ResourceManager\ResourceList.h" />
+    <ClInclude Include="ResourceManager\AnimationResource.h" />
+    <ClInclude Include="ResourceManager\FontResource.h" />
+    <ClInclude Include="ResourceManager\ImageResource.h" />
     <ClInclude Include="ResourceManager\ResourceManager.h" />
-    <ClInclude Include="ResourceManager\Resources\AnimationResource.h" />
-    <ClInclude Include="ResourceManager\Resources\FontResource.h" />
-    <ClInclude Include="ResourceManager\Resources\ImageResource.h" />
-    <ClInclude Include="ResourceManager\Resources\Resource.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,48 +1,72 @@
 #ifndef _RESOURCE_MANAGER_H_
 #define _RESOURCE_MANAGER_H_
 
-#include <map>
-#include <list>
-#include <string>
-
-#include "Resources\Resource.h"
-
-class Resource;
+#include <memory>
+#include "../BaseManager.h"
+#include "AnimationResource.h"
+#include "FontResource.h"
+#include "ImageResource.h"
 
 class ResourceManager{
 public:
-	//создает единственный экземпляр класса
-	static ResourceManager* create_manager();
-	//загружает ресурс из файла и дает ему уникальное имя u_name
-	Resource* load_resource(std::string path, std::string u_name = "_set_my_name_to_default_lol_");
-	//выгружает ресурс с именем u_name из памяти
-	bool unload_resource(std::string u_name);
-	//выгружает ресурс с id == u_id из памяти
-	bool unload_resource(unsigned int u_id);
-	//выгружает ресурс res из памяти
-	bool unload_resource(Resource* res);
-	
-	//Возвращает указатель на ресурс с именем u_name
-	Resource* get_resource(std::string u_name);
-	//Возвращает указатель на ресурс с id == u_id
-	Resource* get_resource(unsigned int u_id);
+	//creates singleton
+	static ResourceManager* init(){
+		static ResourceManager singleton;
+		return &singleton;
+	}
+
+	template <typename T>
+	bool load_resource(std::string path, std::string name){
+		auto& targetMap = get_map<std::shared_ptr<T>>();
+		try{
+			targetMap.add(std::shared_ptr<T>(new T(path, name, targetMap.get_id())), name);
+			return true;
+		}
+		catch (...){
+			//the resource hasn't been loaded properly
+			return false;
+		}
+	}
+
+	template <typename T>
+	std::shared_ptr<T> get_resource(std::string name){
+		try{
+			return get_map<std::shared_ptr<T>>().get(name);
+		}
+		catch (...){
+			//the resource is not in the maps
+			return std::shared_ptr<T>();
+		}
+	}
+
+	template <typename T>
+	std::shared_ptr<T> get_resource(unsigned int id){
+		try{
+			return get_map<std::shared_ptr<T>>().get(id);
+		}
+		catch (...){
+			//the resource is not in the maps
+			return std::shared_ptr<T>();
+		}
+	}
 
 private:
-	//map для быстрого поиска по ключу, также хранит указатель на ресурс
-	std::map<std::string, Resource*> nameMap;
-	std::map<unsigned int, Resource*> idMap;
+	BaseMapManager<std::shared_ptr<AnimationResource>> animationMap;
+	BaseMapManager<std::shared_ptr<ImageResource>> imageMap;
+	BaseMapManager<std::shared_ptr<FontResource>> fontMap;
 
-	//каждому новому ресурсу присваивается новый u_id
-	static unsigned int u_id;
-	inline unsigned int get_next_uid() {return u_id++;}
+	//gets certain map depends on template argument
+	template <typename T> BaseMapManager<T>& get_map();
+	template <> BaseMapManager<std::shared_ptr<AnimationResource>>& get_map(){ return animationMap; }
+	template <> BaseMapManager<std::shared_ptr<ImageResource>>& get_map(){ return imageMap; }
+	template <> BaseMapManager<std::shared_ptr<FontResource>>& get_map(){ return fontMap; }
 
-	//скрываем (синглтон же)
+	//hide it (singleton)
 	ResourceManager() {};
-	~ResourceManager();
+	~ResourceManager() {};
 	ResourceManager(const ResourceManager&) {};
 	ResourceManager& operator=(const ResourceManager&) {};
 };
 
-//короткое название
 typedef ResourceManager RM;
 #endif

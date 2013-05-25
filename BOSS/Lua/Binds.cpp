@@ -34,3 +34,31 @@ void bind_class_input()
 		luabind::def("key_pressed", &bind_key_pressed)
     ];
 }
+
+#include "../NEW/ResourceManager/ResourceManager.h"
+#include "../NEW/ResourceManager/AnimationResource.h"
+bool bind_load_animation_resource(std::string path, std::wstring name)
+{
+	ResourceManager* instance = ResourceManager::init();
+
+	return (instance->load_resource<AnimationResource>(path, name) != nullptr);
+}
+
+bool bind_load_image_resource(std::string path, std::wstring name)
+{
+	ResourceManager* instance = ResourceManager::init();
+
+	return (instance->load_resource<ImageResource>(path, name) != nullptr);
+}
+
+void bind_class_resmngr()
+{
+	//получаем экземпляр Lua
+	Lua* instance = Lua::init();
+
+	luabind::module(instance->get_state())
+    [
+		luabind::def("load_animation_resource", &bind_load_animation_resource),
+		luabind::def("load_image_resource", &bind_load_image_resource)
+    ];
+}
