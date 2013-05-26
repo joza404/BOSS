@@ -3,9 +3,14 @@
 
 #include <string>
 #include <memory>
+#include <map>
 #include "../BaseComponent.h"
 #include "../../BaseObject.h"
 #include "../../ResourceManager/AnimationResource.h"
+#include "../Position/Position.h"
+
+#define DEFAULT_ANIMATION_SPEED 1
+#define DEFAULT_RENDER_LAY 1
 
 class Animation : public BaseComponent, public BaseObject{
 public:
@@ -49,11 +54,17 @@ public:
 	//returns copy of current parameters
 	Parameters get_params() const { return params; }
 
+	//set references to other components
+	void set_position(const std::shared_ptr<Position> pos) { positionComp = pos; }
+
 	Animation(const std::string name, const unsigned int id);
 	~Animation() {};
 private:
 	std::map<std::string, std::shared_ptr<AnimationResource>> stateMap;
 	Parameters params;
+
+	//references to other components
+	std::weak_ptr<Position> positionComp;
 
 	Animation();
 	Animation(const Animation&);

@@ -10,7 +10,7 @@
 class ResourceManager{
 public:
 	//creates singleton
-	static ResourceManager* init(){
+	static ResourceManager* get_instance(){
 		static ResourceManager singleton;
 		return &singleton;
 	}
@@ -19,7 +19,9 @@ public:
 	bool load_resource(std::string path, std::string name){
 		auto& targetMap = get_map<std::shared_ptr<T>>();
 		try{
-			targetMap.add(std::shared_ptr<T>(new T(path, name, targetMap.get_id())), name);
+			//targetMap.add(std::shared_ptr<T>(new T(path, name, targetMap.get_id())), name);
+			//is it faster version then above one?
+			targetMap.add(std::make_shared<T>(path, name, targetMap.get_id()), name);
 			return true;
 		}
 		catch (...){

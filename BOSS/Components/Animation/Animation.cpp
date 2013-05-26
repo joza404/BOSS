@@ -31,11 +31,18 @@ void Animation::update()
 		params.sprite_x_offset = 0;
 		params.currentSprite = 0;
 	}
+
+	//if position component exists
+	if (positionComp.expired() == false){
+		auto shared = positionComp.lock();
+		params.x = shared->get_x;
+		params.y = shared->get_y;
+	}
 }
 
 bool Animation::add_state(const std::string stateName, const std::string resName)
 {
-	auto res = ResourceManager::init()->get_resource<AnimationResource>(resName);
+	auto res = ResourceManager::get_instance()->get_resource<AnimationResource>(resName);
 	if (!res) return false;
 	stateMap[stateName] = res;
 	return true;
@@ -74,11 +81,11 @@ void Animation::set_speed(unsigned int s) {
 }
 
 Animation::Animation(const std::string _name, const unsigned int _id) :  BaseObject(_name, _id){
-	params.animationSpeed = 1;
+	params.animationSpeed = DEFAULT_ANIMATION_SPEED;
 	params.currentSprite = 0;
 	params.frameToWait = 0;
 	params.h = params.w = params.x = params.y = 0;
-	params.renderLay = 1;
+	params.renderLay = DEFAULT_RENDER_LAY;
 	params.speed_changed = false;
 	params.spriteCount = 0;
 	params.sprite_x_offset = 0;
