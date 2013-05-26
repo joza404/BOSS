@@ -4,11 +4,10 @@
 #include "../../BaseObject.h"
 #include "../BaseComponent.h"
 
-#define DEFAULT_X_POSITION 100
-#define DEFAULT_Y_POSITION 100
-
 class Position : public BaseComponent, public BaseObject{
 public:
+	void update();
+
 	int get_x() { return x; }
 	void set_x(int _x) { x = _x; }
 	int get_y() { return y; }

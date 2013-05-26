@@ -16,17 +16,16 @@ public:
 	}
 
 	template <typename T>
-	bool load_resource(std::string path, std::string name){
+	std::shared_ptr<T> load_resource(std::string path, std::string name){
 		auto& targetMap = get_map<std::shared_ptr<T>>();
 		try{
 			//targetMap.add(std::shared_ptr<T>(new T(path, name, targetMap.get_id())), name);
 			//is it faster version then above one?
-			targetMap.add(std::make_shared<T>(path, name, targetMap.get_id()), name);
-			return true;
+			return targetMap.add(std::make_shared<T>(path, name, targetMap.get_id()), name);	 
 		}
 		catch (...){
 			//the resource hasn't been loaded properly
-			return false;
+			return std::shared_ptr<T>();
 		}
 	}
 

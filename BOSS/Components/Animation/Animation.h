@@ -9,9 +9,6 @@
 #include "../../ResourceManager/AnimationResource.h"
 #include "../Position/Position.h"
 
-#define DEFAULT_ANIMATION_SPEED 1
-#define DEFAULT_RENDER_LAY 1
-
 class Animation : public BaseComponent, public BaseObject{
 public:
 	//all Animations parameters
@@ -49,13 +46,15 @@ public:
 
 	//get/set render lay
 	unsigned int get_lay() const { return params.renderLay; }
-	void set_lay(unsigned int l) { params.renderLay = l; }
+	void set_lay(unsigned int lay) { params.renderLay = lay; }
 
 	//returns copy of current parameters
 	Parameters get_params() const { return params; }
 
 	//set references to other components
 	void set_position(const std::shared_ptr<Position> pos) { positionComp = pos; }
+	void set_position(const std::string pos);
+	void unset_position() { positionComp.reset(); }
 
 	Animation(const std::string name, const unsigned int id);
 	~Animation() {};

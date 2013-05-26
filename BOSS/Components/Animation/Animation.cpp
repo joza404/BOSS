@@ -1,6 +1,13 @@
 #include <string>
 #include "Animation.h"
 #include "../../ResourceManager/ResourceManager.h"
+#include "../ComponentManager.h"
+
+//local macroses (in .cpp)
+#define DEFAULT_ANIMATION_SPEED 1
+#define DEFAULT_RENDER_LAY 1
+#define DEFAULT_X 0
+#define DEFAULT_Y 0
 
 void Animation::update()
 {
@@ -35,8 +42,8 @@ void Animation::update()
 	//if position component exists
 	if (positionComp.expired() == false){
 		auto shared = positionComp.lock();
-		params.x = shared->get_x;
-		params.y = shared->get_y;
+		params.x = shared->get_x();
+		params.y = shared->get_y();
 	}
 }
 
@@ -68,23 +75,34 @@ bool Animation::set_state(const std::string stateName)
 	params.currentSprite = 0;
 	params.sprite_x_offset = 0;
 	params.sprite_y_offset = 0;
-	params.w = it->second->image->w;
+	params.w = it->second->image->w / params.spriteCount;
 	params.h = it->second->image->h;
 	params.frameToWait = 0; //render it immediately
 	params.state_changed = true;
 	return true;
 }
 
-void Animation::set_speed(unsigned int s) { 
+void Animation::set_speed(unsigned int s)
+{
 	params.animationSpeed = s;
 	params.speed_changed = true;
 }
 
-Animation::Animation(const std::string _name, const unsigned int _id) :  BaseObject(_name, _id){
+void Animation::set_position(const std::string pos)
+{
+	positionComp = ComponentManager::get_instance()->get_component<Position>(pos);
+}
+
+
+
+Animation::Animation(const std::string _name, const unsigned int _id) :  BaseObject(_name, _id)
+{
 	params.animationSpeed = DEFAULT_ANIMATION_SPEED;
 	params.currentSprite = 0;
 	params.frameToWait = 0;
-	params.h = params.w = params.x = params.y = 0;
+	params.h = params.w = 0;
+	params.x = DEFAULT_X;
+	params.y = DEFAULT_Y;
 	params.renderLay = DEFAULT_RENDER_LAY;
 	params.speed_changed = false;
 	params.spriteCount = 0;
