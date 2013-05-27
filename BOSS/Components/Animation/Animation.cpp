@@ -47,7 +47,7 @@ void Animation::update()
 	}
 }
 
-bool Animation::add_state(const std::string stateName, const std::string resName)
+bool Animation::add_state(const std::string& stateName, const std::string& resName)
 {
 	auto res = ResourceManager::get_instance()->get_resource<AnimationResource>(resName);
 	if (!res) return false;
@@ -55,14 +55,14 @@ bool Animation::add_state(const std::string stateName, const std::string resName
 	return true;
 }
 
-bool Animation::add_state(const std::string stateName, const std::shared_ptr<AnimationResource> res)
+bool Animation::add_state(const std::string& stateName, const std::shared_ptr<AnimationResource>& res)
 {
 	if (!res) return false;
 	stateMap[stateName] = res;
 	return true;
 }
 
-bool Animation::set_state(const std::string stateName)
+bool Animation::set_state(const std::string& stateName)
 {
 	
 	auto it = stateMap.find(stateName);
@@ -88,14 +88,14 @@ void Animation::set_speed(unsigned int s)
 	params.speed_changed = true;
 }
 
-void Animation::set_position(const std::string pos)
+void Animation::set_position(const std::string& pos)
 {
 	positionComp = ComponentManager::get_instance()->get_component<Position>(pos);
 }
 
 
 
-Animation::Animation(const std::string _name, const unsigned int _id) :  BaseObject(_name, _id)
+Animation::Animation(const std::string& _name, const unsigned int _id) :  BaseObject(_name, _id)
 {
 	params.animationSpeed = DEFAULT_ANIMATION_SPEED;
 	params.currentSprite = 0;

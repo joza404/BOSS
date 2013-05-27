@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 
-AnimationResource::AnimationResource(const std::string path, const std::string _name, const unsigned int _id) 
+AnimationResource::AnimationResource(const std::string& path, const std::string& _name, const unsigned int _id) 
 	: BaseObject(_name, _id), image(nullptr)
 {
 	std::ifstream file;

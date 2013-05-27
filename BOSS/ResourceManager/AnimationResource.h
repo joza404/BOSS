@@ -11,7 +11,7 @@ public:
 	unsigned int spriteCount;
 	int transColor;
 
-	AnimationResource(const std::string path, const std::string name, const unsigned int id);
+	AnimationResource(const std::string& path, const std::string& name, const unsigned int id);
 	~AnimationResource();
 
 private:

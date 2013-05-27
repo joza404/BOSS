@@ -8,7 +8,7 @@ public:
 	const std::string name;
 	const unsigned int id;
 
-	BaseObject(const std::string _name, const unsigned int _id) 
+	BaseObject(const std::string& _name, const unsigned int _id) 
 		: name(_name), id(_id) {};
 	virtual ~BaseObject() = 0 {};
 

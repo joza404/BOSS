@@ -8,12 +8,12 @@ class Position : public BaseComponent, public BaseObject{
 public:
 	void update();
 
-	int get_x() { return x; }
+	int get_x() const { return x; }
 	void set_x(int _x) { x = _x; }
-	int get_y() { return y; }
+	int get_y() const { return y; }
 	void set_y(int _y) { x = _y; }
 
-	Position(const std::string name, const unsigned int id);
+	Position(const std::string& name, const unsigned int id);
 	~Position() {};
 private:
 	int x, y;

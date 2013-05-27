@@ -26,7 +26,7 @@ public:
 	}
 
 	template <typename T>
-	std::shared_ptr<T> create_component(std::string name){
+	std::shared_ptr<T> create_component(const std::string& name){
 		auto& targetMap = get_map<std::shared_ptr<T>>();
 		try{
 			return targetMap.add(std::make_shared<T>(name, targetMap.get_id()), name);	 
@@ -38,46 +38,25 @@ public:
 	}
 
 	template <typename T>
-	bool delete_component(std::shared_ptr<T> element){
+	bool delete_component(const std::shared_ptr<T>& element){
 		auto& targetMap = get_map<std::shared_ptr<T>>();
-		try{
-			targetMap.remove(element);
-			return true;
-		}
-		catch (...){
-			//the component hasn't been deleted
-			return false;
-		}
+		return targetMap.remove(element);
 	}
 
 	template <typename T>
-	bool delete_component(std::string name){
+	bool delete_component(const std::string& name){
 		auto& targetMap = get_map<std::shared_ptr<T>>();
-		try{
-			targetMap.remove(name);
-			return true;
-		}
-		catch (...){
-			//the component hasn't been deleted
-			return false;
-		}
+		return targetMap.remove(name);
 	}
 
 	template <typename T>
 	bool delete_component(unsigned int id){
 		auto& targetMap = get_map<std::shared_ptr<T>>();
-		try{
-			targetMap.remove(id);
-			return true;
-		}
-		catch (...){
-			//the component hasn't been deleted
-			return false;
-		}
+		return targetMap.remove(id);
 	}
 
 	template <typename T>
-	std::shared_ptr<T> get_component(std::string name){
+	std::shared_ptr<T> get_component(const std::string& name) const{
 		try{
 			return get_map<std::shared_ptr<T>>().get(name);
 		}
@@ -88,7 +67,7 @@ public:
 	}
 
 	template <typename T>
-	std::shared_ptr<T> get_component(unsigned int id){
+	std::shared_ptr<T> get_component(unsigned int id) const{
 		try{
 			return get_map<std::shared_ptr<T>>().get(id);
 		}
@@ -108,15 +87,16 @@ public:
 	}
 
 private:
-	UpdateManager<std::shared_ptr<Position>> positionMap;
-	UpdateManager<std::shared_ptr<Animation>> animationMap;
-	UpdateManager<std::shared_ptr<Image>> imageMap;
+	//using mutable to make "get_map" a const function (because it is called by const "get_component")
+	mutable UpdateManager<std::shared_ptr<Position>> positionMap;
+	mutable UpdateManager<std::shared_ptr<Animation>> animationMap;
+	mutable UpdateManager<std::shared_ptr<Image>> imageMap;
 
 	//gets certain map depends on template argument
-	template <typename T> UpdateManager<T>& get_map();
-	template <> UpdateManager<std::shared_ptr<Position>>& get_map(){ return positionMap; }
-	template <> UpdateManager<std::shared_ptr<Animation>>& get_map(){ return animationMap; }
-	template <> UpdateManager<std::shared_ptr<Image>>& get_map(){ return imageMap; }
+	template <typename T> UpdateManager<T>& get_map() const;
+	template <> UpdateManager<std::shared_ptr<Position>>& get_map() const{ return positionMap; }
+	template <> UpdateManager<std::shared_ptr<Animation>>& get_map() const{ return animationMap; }
+	template <> UpdateManager<std::shared_ptr<Image>>& get_map() const{ return imageMap; }
 
 	//hide it (singleton)
 	ComponentManager() {};

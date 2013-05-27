@@ -23,8 +23,8 @@ public:
 	void update();
 
 	//set image resource
-	void set_resource(std::shared_ptr<ImageResource> res);
-	void set_resource(std::string res);
+	void set_resource(const std::shared_ptr<ImageResource>& res);
+	void set_resource(const std::string& res);
 
 	//get/set render lay
 	unsigned int get_lay() const { return params.renderLay; }
@@ -34,11 +34,11 @@ public:
 	Parameters get_params() const { return params; }
 
 	//set references to other components
-	void set_position(const std::shared_ptr<Position> pos) { positionComp = pos; }
-	void set_position(const std::string pos);
+	void set_position(const std::shared_ptr<Position>& pos) { positionComp = pos; }
+	void set_position(const std::string& pos);
 	void unset_position() { positionComp.reset(); }
 
-	Image (const std::string name, const unsigned int id);
+	Image (const std::string& name, const unsigned int id);
 	~Image () {};
 private:
 	Parameters params;

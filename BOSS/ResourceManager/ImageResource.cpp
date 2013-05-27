@@ -5,7 +5,7 @@
 #include <fstream>
 #include <iostream>
 
-ImageResource::ImageResource(const std::string path, const std::string _name, const unsigned int _id)
+ImageResource::ImageResource(const std::string& path, const std::string& _name, const unsigned int _id)
 	: BaseObject(_name, _id), image(nullptr)
 {
 	std::ifstream file;

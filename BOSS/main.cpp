@@ -4,6 +4,7 @@
 
 #include "ResourceManager\ResourceManager.h"
 #include "Components\ComponentManager.h"
+//#include "Renderer\Renderer.h"
 
 #include "ResourceManager\AnimationResource.h"
 #include "ResourceManager\FontResource.h"
@@ -21,6 +22,7 @@ int main(int argc,char** argv)
 
 	ResourceManager* rm = ResourceManager::get_instance();
 	ComponentManager* cm = ComponentManager::get_instance();
+	//Renderer* r = Renderer::get_instance();
 
 	//animation TESTS
 	rm->load_resource<AnimationResource>("..//game//images//standingboy.info", "boy_stay");

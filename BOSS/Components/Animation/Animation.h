@@ -34,11 +34,11 @@ public:
 	void update();
 
 	//the resource also has to be inside res manager 
-	bool add_state(const std::string stateName, const std::string resName);
-	bool add_state(const std::string stateName, const std::shared_ptr<AnimationResource> res);
+	bool add_state(const std::string& stateName, const std::string& resName);
+	bool add_state(const std::string& stateName, const std::shared_ptr<AnimationResource>& res);
 	//get/set current state
 	std::string get_state() const { return params.currentStateName; }
-	bool set_state(const std::string stateName);
+	bool set_state(const std::string& stateName);
 
 	//get/set animation speed
 	unsigned int get_speed() const { return params.animationSpeed; }
@@ -52,11 +52,11 @@ public:
 	Parameters get_params() const { return params; }
 
 	//set references to other components
-	void set_position(const std::shared_ptr<Position> pos) { positionComp = pos; }
-	void set_position(const std::string pos);
+	void set_position(const std::shared_ptr<Position>& pos) { positionComp = pos; }
+	void set_position(const std::string& pos);
 	void unset_position() { positionComp.reset(); }
 
-	Animation(const std::string name, const unsigned int id);
+	Animation(const std::string& name, const unsigned int id);
 	~Animation() {};
 private:
 	std::map<std::string, std::shared_ptr<AnimationResource>> stateMap;

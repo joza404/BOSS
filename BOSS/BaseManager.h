@@ -4,70 +4,73 @@
 #include <string>
 #include <map>
 
+/*
+This manager has to store only the pointers (raw or smart),
+because it contains two maps (id and name) and each of them has to store
+pointers that point to the SAME memory location
+*/
+
 template <typename T>
 class BaseMapManager{
 public:
 	//adds element T to maps
-	T add(T element, std::string name){
+	T add(const T& element, const std::string& name){
 		nameMap[name] = element;
 		idMap[id] = element;
 		id++;
-		return element;
+		return element; //it copies the pointer
 	}
 	//removes element T from maps
-	T remove(T element){
+	bool remove(const T& element){
 		nameMap.erase(element->name);
 		idMap.erase(element->id);
-		return element;
+		return true;
 	}
-	T remove(std::string name){
+	bool remove(const std::string& name){
 		try{
 			T element = nameMap.at(name); 
-			remove(element);
-			return element;
+			return remove(element);
 		}
 		catch (...){
-			throw;
+			return false;
 		}
 	}
-	T remove(unsigned int id){
+	bool remove(unsigned int id){
 		try{
 			T element = idMap.at(id); 
-			remove(element);
-			return element;
+			return remove(element);;
 		}
 		catch (...){
-			throw;
+			return false;
 		}
 	}
 	//returns element T from maps (but doesn't remove it)
-	T get(std::string name){
+	T& get(const std::string& name) const{
 		try{
-			T element = nameMap.at(name); 
-			return element;
+			return nameMap.at(name);
 		}
 		catch (...){
 			throw;
 		}
 	}
-	T get(unsigned int id){
-		try{
-			T element = idMap.at(id); 
-			return element;
+	T& get(unsigned int id) const{
+		try{ 
+			return idMap.at(id);
 		}
 		catch (...){
 			throw;
 		}
 	}
 
-	unsigned int get_id() { return id; }
+	unsigned int get_id() const{ return id; }
 
 	BaseMapManager() { id = 0; };
 	~BaseMapManager() { nameMap.clear(); idMap.clear(); };
 
 protected:
-	std::map<std::string, T> nameMap;
-	std::map<unsigned int, T> idMap;
+	//using mutable to make "at" a const function (because it is called by const "get")
+	mutable std::map<std::string, T> nameMap;
+	mutable std::map<unsigned int, T> idMap;
 
 	//each element of type T gets new unique id
 	unsigned int id;

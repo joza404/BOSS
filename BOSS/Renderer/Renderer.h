@@ -1,41 +1,57 @@
 #ifndef _RENDERER_H_
 #define _RENDERER_H_
 
-#include <SDL.h>
-#include "..\ResourceManager\AnimationResource.h""
+#include <string>
+#include "../ResourceManager/AnimationResource.h"
+#include "../ResourceManager/ImageResource.h"
+#include "../Components/Animation/Animation.h"
+#include "../Components/Image/Image.h"
 
+typedef unsigned int uint;
 
 class Renderer{
 public:
 	//creates singleton
-	static Renderer* init(std::string windowCaption, int screenWidth, int screenHeight,
-							  int screenBitFormat, int FPS);
+	static Renderer* get_instance(){
+		static Renderer singleton;
+		return &singleton;
+	}
+	
+	void create_window(std::string windowCaption, uint screenWidth, uint screenHeight,
+							  uint screenBitFormat, uint FPS);
 
-	//regulate fps (put this on the start of game loop)
+	//render all the objects (main.cpp calls it)
+	void render();
+
+	//regulate fps (main.cpp calls it)
 	void fps_start();
-	//regulate fps (put this on the end of game loop)
-	void fps_regulate();
+	void fps_end();
 
-	void set_key_color(AnimationResource* res);
-	void convert_format(AnimationResource* res);
+	//resources call it from its constructors
+	void set_color_key(AnimationResource* );
+	void convert_format(AnimationResource* );
+	void convert_format(ImageResource* );
+
+	//components call it 
+	void create_lay(); //auto numeration from 0
+	unsigned int last_lay();
+
+	//components call it
+	bool register_component(Animation*, unsigned int lay);
+	bool register_component(Image*, unsigned int lay);
+	bool unregister_component(Animation*, unsigned int lay);
+	bool unregister_component(Image*, unsigned int lay);
 
 private:
-	struct ScreenSettings{
+	struct Parameters{
 		std::string caption;
-		int w;
-		int h;
-		int bitFormat;
-		int FPS;
-	};
-	ScreenSettings settings;
+		uint w;
+		uint h;
+		uint bitFormat;
+		uint FPS;
+	} params;
 
-	//экран
-	SDL_Surface* screen;
-
-	//таймер для фпса
-	Uint32 timerFPS;
-
-	//hide it
+	//hide it(singleton)
 	Renderer() {};
 	~Renderer();
 	Renderer(const Renderer&) {};

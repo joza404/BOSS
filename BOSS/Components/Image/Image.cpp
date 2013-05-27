@@ -17,7 +17,7 @@ void Image::update()
 	}
 }
 
-void Image::set_resource(std::shared_ptr<ImageResource> res)
+void Image::set_resource(const std::shared_ptr<ImageResource>& res)
 {
 	params.resource = res;
 	params.w = res->image->w;
@@ -25,19 +25,19 @@ void Image::set_resource(std::shared_ptr<ImageResource> res)
 }
 
 
-void Image::set_resource(std::string res)
+void Image::set_resource(const std::string& res)
 {
 	params.resource = ResourceManager::get_instance()->get_resource<ImageResource>(res);
 	params.w = params.resource->image->w;
 	params.h = params.resource->image->h;
 }
 
-void Image::set_position(const std::string pos)
+void Image::set_position(const std::string& pos)
 {
 	positionComp = ComponentManager::get_instance()->get_component<Position>(pos);
 }
 
-Image::Image (const std::string _name, const unsigned int _id) : BaseObject(_name, _id)
+Image::Image (const std::string& _name, const unsigned int _id) : BaseObject(_name, _id)
 {
 	params.renderLay = DEFAULT_RENDER_LAY;
 	params.x = DEFAULT_X;

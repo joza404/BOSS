@@ -10,7 +10,7 @@ public:
 	TTF_Font* font;
 	unsigned int size;
 
-	FontResource(const std::string path, const std::string name, const unsigned int id);
+	FontResource(const std::string& path, const std::string& name, const unsigned int id);
 	~FontResource();
 
 private:

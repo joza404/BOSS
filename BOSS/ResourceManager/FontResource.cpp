@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iostream>
 
-FontResource::FontResource(const std::string path, const std::string _name, const unsigned int _id) 
+FontResource::FontResource(const std::string& path, const std::string& _name, const unsigned int _id) 
 	: BaseObject(_name, _id), font(nullptr)
 {
 	std::ifstream file;
