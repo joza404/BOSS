@@ -91,6 +91,7 @@
     <ClCompile Include="Components\Animation\Animation.cpp" />
     <ClCompile Include="Components\Image\Image.cpp" />
     <ClCompile Include="Components\Position\Position.cpp" />
+    <ClCompile Include="Components\Text\Text.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
     <ClCompile Include="ResourceManager\AnimationResource.cpp" />
@@ -105,6 +106,7 @@
     <ClInclude Include="Components\ComponentManager.h" />
     <ClInclude Include="Components\Image\Image.h" />
     <ClInclude Include="Components\Position\Position.h" />
+    <ClInclude Include="Components\Text\Text.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="Renderer\Renderer.h" />
     <ClInclude Include="ResourceManager\AnimationResource.h" />

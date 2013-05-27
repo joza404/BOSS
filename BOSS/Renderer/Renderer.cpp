@@ -32,6 +32,9 @@ void Renderer::render()
 		for(auto& image : layer.imageSet){
 			render_component(image);
 		}
+		for(auto& text : layer.textSet){
+			render_component(text);
+		}
 	}
 	SDL_Flip(screen);
 }
@@ -97,6 +100,12 @@ bool Renderer::register_component(Image* img, unsigned int layer)
 	return true;
 }
 
+bool Renderer::register_component(Text* text, unsigned int layer)
+{
+	layers[layer].textSet.insert(text);
+	return true;
+}
+
 bool Renderer::unregister_component(Animation* anim, unsigned int layer)
 {
 	layers[layer].animationSet.erase(anim);
@@ -106,6 +115,12 @@ bool Renderer::unregister_component(Animation* anim, unsigned int layer)
 bool Renderer::unregister_component(Image* img, unsigned int layer)
 {
 	layers[layer].imageSet.erase(img);
+	return true;
+}
+
+bool Renderer::unregister_component(Text* text, unsigned int layer)
+{
+	layers[layer].textSet.erase(text);
 	return true;
 }
 
@@ -141,4 +156,21 @@ void Renderer::render_component(Image* img)
 	screen.y = params.y;
 
 	SDL_BlitSurface(params.resource->image, &image, this->screen, &screen);
+}
+
+void Renderer::render_component(Text* text)
+{
+	Text::Parameters params = text->get_params();
+
+	SDL_Rect image;
+	image.x = 0;
+	image.y = 0;
+	image.w = params.w;
+	image.h = params.h;
+
+	SDL_Rect screen;
+	screen.x = params.x;
+	screen.y = params.y;
+
+	SDL_BlitSurface(params.textSurface, &image, this->screen, &screen);
 }

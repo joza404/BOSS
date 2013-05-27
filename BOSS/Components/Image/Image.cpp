@@ -23,6 +23,12 @@ void Image::set_resource(const std::shared_ptr<ImageResource>& res)
 	params.resource = res;
 	params.w = res->image->w;
 	params.h = res->image->h;
+
+	//first time here
+	if (params.regedInRenderer == false){
+		Renderer::get_instance()->register_component(this, params.renderLayer);
+		params.regedInRenderer = true;
+	}
 }
 
 
@@ -31,6 +37,12 @@ void Image::set_resource(const std::string& res)
 	params.resource = ResourceManager::get_instance()->get_resource<ImageResource>(res);
 	params.w = params.resource->image->w;
 	params.h = params.resource->image->h;
+
+	//first time here
+	if (params.regedInRenderer == false){
+		Renderer::get_instance()->register_component(this, params.renderLayer);
+		params.regedInRenderer = true;
+	}
 }
 
 bool Image::set_layer(unsigned int layer)
@@ -39,9 +51,11 @@ bool Image::set_layer(unsigned int layer)
 	if (renderer->last_layer() > layer)
 		return false;
 
-	renderer->unregister_component(this, params.renderLayer);
 	params.renderLayer = layer;
-	renderer->register_component(this, layer);
+	if (params.regedInRenderer == false){
+		renderer->unregister_component(this, params.renderLayer);
+		renderer->register_component(this, layer);
+	}
 	return true;
 }
 
@@ -55,12 +69,11 @@ Image::Image(const std::string& _name, const unsigned int _id) : BaseObject(_nam
 	params.renderLayer = DEFAULT_RENDER_LAYER;
 	params.x = DEFAULT_X;
 	params.y = DEFAULT_Y;
-	params.x = params.y = 0;
-
-	Renderer::get_instance()->register_component(this, params.renderLayer);
+	params.regedInRenderer = false;
 }
 
 Image::~Image()
 {
-	Renderer::get_instance()->unregister_component(this, params.renderLayer);
+	if (params.regedInRenderer == true)
+		Renderer::get_instance()->unregister_component(this, params.renderLayer);
 }

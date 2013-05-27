@@ -6,7 +6,7 @@
 
 //local macroses (in .cpp)
 #define DEFAULT_ANIMATION_SPEED 1
-#define DEFAULT_RENDER_LAYER 1
+#define DEFAULT_RENDER_LAYER 2
 #define DEFAULT_X 0
 #define DEFAULT_Y 0
 
@@ -82,6 +82,12 @@ bool Animation::set_state(const std::string& stateName)
 	params.h = it->second->image->h;
 	params.frameToWait = 0; //render it immediately
 	params.state_changed = true;
+
+	//first time here
+	if (params.regedInRenderer == false){
+		Renderer::get_instance()->register_component(this, params.renderLayer);
+		params.regedInRenderer = true;
+	}
 	return true;
 }
 
@@ -91,9 +97,11 @@ bool Animation::set_layer(unsigned int layer)
 	if (renderer->last_layer() > layer)
 		return false;
 
-	renderer->unregister_component(this, params.renderLayer);
 	params.renderLayer = layer;
-	renderer->register_component(this, layer);
+	if (params.regedInRenderer == true){
+		renderer->unregister_component(this, params.renderLayer);	
+		renderer->register_component(this, layer);
+	}
 	return true;
 }
 
@@ -122,11 +130,11 @@ Animation::Animation(const std::string& _name, const unsigned int _id) :  BaseOb
 	params.sprite_x_offset = 0;
 	params.sprite_y_offset = 0;
 	params.state_changed = false;
-
-	Renderer::get_instance()->register_component(this, params.renderLayer);
+	params.regedInRenderer = false;
 }
 
 Animation::~Animation()
 {
-	Renderer::get_instance()->unregister_component(this, params.renderLayer);
+	if (params.regedInRenderer == true)
+		Renderer::get_instance()->unregister_component(this, params.renderLayer);
 }

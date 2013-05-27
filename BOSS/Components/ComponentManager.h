@@ -6,6 +6,7 @@
 #include "Position\Position.h"
 #include "Animation\Animation.h"
 #include "Image\Image.h"
+#include "Text\Text.h"
 
 template <typename T>
 class UpdateManager : public BaseMapManager<T>{
@@ -84,6 +85,7 @@ public:
 		update<Position>();
 		update<Animation>();
 		update<Image>();
+		update<Text>();
 	}
 
 private:
@@ -91,12 +93,14 @@ private:
 	mutable UpdateManager<std::shared_ptr<Position>> positionMap;
 	mutable UpdateManager<std::shared_ptr<Animation>> animationMap;
 	mutable UpdateManager<std::shared_ptr<Image>> imageMap;
+	mutable UpdateManager<std::shared_ptr<Text>> textMap;
 
 	//gets certain map depends on template argument
 	template <typename T> UpdateManager<T>& get_map() const;
 	template <> UpdateManager<std::shared_ptr<Position>>& get_map() const{ return positionMap; }
 	template <> UpdateManager<std::shared_ptr<Animation>>& get_map() const{ return animationMap; }
 	template <> UpdateManager<std::shared_ptr<Image>>& get_map() const{ return imageMap; }
+	template <> UpdateManager<std::shared_ptr<Text>>& get_map() const{ return textMap; }
 
 	//hide it (singleton)
 	ComponentManager() {};

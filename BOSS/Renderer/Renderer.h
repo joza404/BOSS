@@ -9,6 +9,7 @@
 #include "../ResourceManager/ImageResource.h"
 #include "../Components/Animation/Animation.h"
 #include "../Components/Image/Image.h"
+#include "../Components/Text/Text.h"
 
 //global macroses (in .h)
 #define RENDER_LAYER_AMOUNT 10
@@ -41,8 +42,10 @@ public:
 	//components call it
 	bool register_component(Animation*, unsigned int layer);
 	bool register_component(Image*, unsigned int layer);
+	bool register_component(Text*, unsigned int layer);
 	bool unregister_component(Animation*, unsigned int layer);
 	bool unregister_component(Image*, unsigned int layer);
+	bool unregister_component(Text*, unsigned int layer);
 
 private:
 	struct WindowParameters{
@@ -60,11 +63,13 @@ private:
 	struct RenderLayer{
 		std::set<Animation*> animationSet;
 		std::set<Image*> imageSet;
+		std::set<Text*> textSet;
 	};
 	std::array<RenderLayer, RENDER_LAYER_AMOUNT> layers;
 
 	void render_component(Animation*);
 	void render_component(Image*);
+	void render_component(Text*);
 
 	//hide it(singleton)
 	Renderer() {}

@@ -18,6 +18,7 @@ public:
 
 		unsigned int animationSpeed;
 		unsigned int renderLayer;
+		bool regedInRenderer;
 		unsigned int currentSprite;
 		int frameToWait;
 		unsigned int spriteCount;
