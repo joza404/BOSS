@@ -13,7 +13,7 @@ public:
 	struct Parameters{
 		std::shared_ptr<ImageResource> resource;
 
-		unsigned int renderLay;
+		unsigned int renderLayer;
 
 		int x, y;
 		unsigned int w, h;
@@ -27,8 +27,8 @@ public:
 	void set_resource(const std::string& res);
 
 	//get/set render lay
-	unsigned int get_lay() const { return params.renderLay; }
-	void set_lay(unsigned int lay) { params.renderLay = lay; }
+	unsigned int get_layer() const { return params.renderLayer; }
+	bool set_layer(unsigned int layer);
 
 	//returns copy of current parameters
 	Parameters get_params() const { return params; }
@@ -39,7 +39,7 @@ public:
 	void unset_position() { positionComp.reset(); }
 
 	Image (const std::string& name, const unsigned int id);
-	~Image () {};
+	~Image ();
 private:
 	Parameters params;
 

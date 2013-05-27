@@ -17,9 +17,9 @@ public:
 		std::string currentStateName;
 
 		unsigned int animationSpeed;
-		unsigned int renderLay;
+		unsigned int renderLayer;
 		unsigned int currentSprite;
-		unsigned int frameToWait;
+		int frameToWait;
 		unsigned int spriteCount;
 
 		int x, y;
@@ -44,9 +44,9 @@ public:
 	unsigned int get_speed() const { return params.animationSpeed; }
 	void set_speed(unsigned int s);
 
-	//get/set render lay
-	unsigned int get_lay() const { return params.renderLay; }
-	void set_lay(unsigned int lay) { params.renderLay = lay; }
+	//get/set render layer
+	unsigned int get_layer() const { return params.renderLayer; }
+	bool set_layer(unsigned int layer);
 
 	//returns copy of current parameters
 	Parameters get_params() const { return params; }
@@ -57,7 +57,7 @@ public:
 	void unset_position() { positionComp.reset(); }
 
 	Animation(const std::string& name, const unsigned int id);
-	~Animation() {};
+	~Animation();
 private:
 	std::map<std::string, std::shared_ptr<AnimationResource>> stateMap;
 	Parameters params;

@@ -1,10 +1,13 @@
 #include <locale>
 #include <SDL_ttf.h>
+#include <SDL.h>
 #include <memory>
+
+#include "globals.h"
 
 #include "ResourceManager\ResourceManager.h"
 #include "Components\ComponentManager.h"
-//#include "Renderer\Renderer.h"
+#include "Renderer\Renderer.h"
 
 #include "ResourceManager\AnimationResource.h"
 #include "ResourceManager\FontResource.h"
@@ -20,9 +23,13 @@ int main(int argc,char** argv)
 	setlocale(LC_ALL, "russian_russia.1251");
 	TTF_Init();
 
+	Renderer* r = Renderer::get_instance();
 	ResourceManager* rm = ResourceManager::get_instance();
 	ComponentManager* cm = ComponentManager::get_instance();
-	//Renderer* r = Renderer::get_instance();
+	
+
+	//renderer TESTS
+	r->create_window(WINDOW_CAPTION, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_BIT_FORMAT, WINDOW_FPS);
 
 	//animation TESTS
 	rm->load_resource<AnimationResource>("..//game//images//standingboy.info", "boy_stay");
@@ -46,5 +53,40 @@ int main(int argc,char** argv)
 
 	
 	cm->update_components();
+	r->render();
+
+	SDL_Event event;
+
+	//game loop
+	while (true){
+		r->fps_start();
+
+		SDL_PollEvent(&event);
+		if (event.type == SDL_KEYDOWN){
+			if (event.key.keysym.sym == SDLK_LEFT){
+				break;
+			}
+			if (event.key.keysym.sym == SDLK_SPACE){
+				if (cm->get_component<Animation>("boy")->get_state() == "boy_stay"){
+					cm->get_component<Animation>("boy")->set_state("boy_reversed_stay");
+				} else
+				if (cm->get_component<Animation>("boy")->get_state() == "boy_reversed_stay"){
+					cm->get_component<Animation>("boy")->set_state("boy_stay");
+				}
+			}
+			if (event.key.keysym.sym == SDLK_DOWN){
+				cm->get_component<Animation>("boy")->set_speed(cm->get_component<Animation>("boy")->get_speed()+1);
+			}
+			if (event.key.keysym.sym == SDLK_RIGHT){
+				cm->get_component<Position>("boy_position")->set_x(cm->get_component<Position>("boy_position")->get_x()+1);
+			}
+		}
+
+		cm->update_components();
+		r->render();
+
+		r->fps_end();
+	}
+	
 	return 0;
 }

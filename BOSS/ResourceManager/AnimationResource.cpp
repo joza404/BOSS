@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <fstream>
 #include <iostream>
+#include "../Renderer/Renderer.h"
 
 AnimationResource::AnimationResource(const std::string& path, const std::string& _name, const unsigned int _id) 
 	: BaseObject(_name, _id), image(nullptr)
@@ -42,6 +43,10 @@ AnimationResource::AnimationResource(const std::string& path, const std::string&
 		file.close();
 		throw;
 	}
+
+	Renderer* renderer = Renderer::get_instance();
+	renderer->convert_format(this);
+	renderer->set_color_key(this);
 }
 
 AnimationResource::~AnimationResource()

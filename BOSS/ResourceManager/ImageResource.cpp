@@ -1,5 +1,6 @@
 #include "ImageResource.h"
-#include "..\BaseObject.h"
+#include "../BaseObject.h"
+#include "../Renderer/Renderer.h"
 #include <SDL_image.h>
 #include <SDL.h>
 #include <fstream>
@@ -39,6 +40,8 @@ ImageResource::ImageResource(const std::string& path, const std::string& _name, 
 		file.close();
 		throw;
 	}
+	
+	Renderer::get_instance()->convert_format(this);
 }
 
 ImageResource::~ImageResource()
