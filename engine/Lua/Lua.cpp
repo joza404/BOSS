@@ -16,23 +16,6 @@
 #include "../Components/Position/Position.h"
 #include "../Components/Text/Text.h"
 
-
-//creates singleton
-Lua* Lua::get_instance()
-{
-	static Lua singleton;
-	static bool classCreated = false;
-	if (classCreated == true) return &singleton;
-
-	//init lua and luaponte
-	singleton.state = luaL_newstate();
-    luaL_openlibs(singleton.state);
-	luaponte::open(singleton.state);
-
-	classCreated = true;
-	return &singleton;
-}
-
 //executes a script
 bool Lua::do_file(const std::string& path)
 {
@@ -42,6 +25,14 @@ bool Lua::do_file(const std::string& path)
 	luaL_dofile(this->state,path.c_str());
 
 	return true;
+}
+
+Lua::Lua()
+{
+	//init lua and luaponte
+	state = luaL_newstate();
+    luaL_openlibs(state);
+	luaponte::open(state);
 }
 
 Lua::~Lua()

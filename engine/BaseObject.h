@@ -9,15 +9,14 @@ public:
 	const unsigned int id;
 
 	BaseObject(const std::string& _name, const unsigned int _id) 
-		: name(_name), id(_id) {};
+		: name(_name), id(_id) {}
 	virtual ~BaseObject() = 0;
 
-private:
-	BaseObject();
-	BaseObject(const BaseObject&);
-	BaseObject& operator=(const BaseObject&);
+	BaseObject() = delete;
+	BaseObject(const BaseObject&) = delete;
+	BaseObject& operator=(const BaseObject&) = delete;
 };
 //pure virtual destructor
-inline BaseObject::~BaseObject() {};
+inline BaseObject::~BaseObject() = default;
 
 #endif

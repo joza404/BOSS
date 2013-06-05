@@ -1,11 +1,13 @@
-#include "ImageResource.h"
-#include "../BaseObject.h"
-#include "../Renderer/Renderer.h"
-#include <SDL_image.h>
-#include <SDL.h>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
+
+#include <SDL_image.h>
+#include <SDL.h>
+
+#include "ImageResource.h"
+#include "../BaseObject.h"
+#include "../Renderer/Renderer.h"
 
 ImageResource::ImageResource(const std::string& path, const std::string& _name, const unsigned int _id)
 	: BaseObject(_name, _id), image(nullptr)

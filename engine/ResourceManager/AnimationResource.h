@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <string>
+
 #include "../BaseObject.h"
 
 class AnimationResource : public BaseObject{
@@ -14,10 +15,9 @@ public:
 	AnimationResource(const std::string& path, const std::string& name, const unsigned int id);
 	~AnimationResource();
 
-private:
-	AnimationResource();
-	AnimationResource(const AnimationResource&);
-	AnimationResource& operator=(const AnimationResource&);
+	AnimationResource() = delete;
+	AnimationResource(const AnimationResource&) = delete;
+	AnimationResource& operator=(const AnimationResource&) = delete;
 };
 
 typedef AnimationResource AR;

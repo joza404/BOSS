@@ -2,9 +2,11 @@
 #define _RENDERER_H_
 
 #include <string>
-#include <SDL.h>
 #include <set>
 #include <array>
+
+#include <SDL.h>
+
 #include "../ResourceManager/AnimationResource.h"
 #include "../ResourceManager/ImageResource.h"
 #include "../Components/Animation/Animation.h"
@@ -72,10 +74,10 @@ private:
 	void render_component(Text*);
 
 	//hide it(singleton)
-	Renderer() {}
-	~Renderer() {};
-	Renderer(const Renderer&) {};
-	Renderer& operator=(const Renderer&) {};
+	Renderer() = default;
+	~Renderer() = default;
+	Renderer(const Renderer&) = delete;
+	Renderer& operator=(const Renderer&) = delete;
 };
 
 #endif

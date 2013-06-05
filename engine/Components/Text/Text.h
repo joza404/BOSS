@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <SDL.h>
+
 #include "../BaseComponent.h"
 #include "../../BaseObject.h"
 #include "../../ResourceManager/FontResource.h"
@@ -58,6 +59,10 @@ public:
 
 	Text(const std::string& name, const unsigned int id);
 	~Text();
+	Text() = delete;
+	Text(const Text&) = delete;
+	Text& operator=(const Text&) = delete;
+	
 private:
 	Parameters params;
 
@@ -66,10 +71,6 @@ private:
 
 	//references to other components
 	std::weak_ptr<Position> positionComp;
-
-	Text();
-	Text(const Text&);
-	Text& operator=(const Text&);
 };
 
 #endif

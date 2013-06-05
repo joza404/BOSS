@@ -1,10 +1,12 @@
-#include "AnimationResource.h"
-#include <SDL_image.h>
-#include <SDL.h>
 #include <fstream>
 #include <iostream>
-#include "../Renderer/Renderer.h"
 #include <stdexcept>
+
+#include <SDL_image.h>
+#include <SDL.h>
+
+#include "AnimationResource.h"
+#include "../Renderer/Renderer.h"
 
 AnimationResource::AnimationResource(const std::string& path, const std::string& _name, const unsigned int _id) 
 	: BaseObject(_name, _id), image(nullptr)

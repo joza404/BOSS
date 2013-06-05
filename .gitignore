@@ -1,4 +1,7 @@
 bin/
+cmake/*
+!cmake/FindLua.cmake
+!cmake/FindLuaponte.cmake
 engine/testFSM/
 engine/Lua/Binds.cpp
 engine/Lua/Binds.h

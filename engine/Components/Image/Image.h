@@ -2,6 +2,7 @@
 #define _IMAGE_H_
 
 #include <memory>
+
 #include "../BaseComponent.h"
 #include "../../BaseObject.h"
 #include "../Position/Position.h"
@@ -41,15 +42,14 @@ public:
 
 	Image(const std::string& name, const unsigned int id);
 	~Image();
+	Image() = delete;
+	Image(const Image&) = delete;
+	Image& operator=(const Image&) = delete;
 private:
 	Parameters params;
 
 	//references to other components
 	std::weak_ptr<Position> positionComp;
-
-	Image();
-	Image(const Image&);
-	Image& operator=(const Image&);
 };
 
 #endif

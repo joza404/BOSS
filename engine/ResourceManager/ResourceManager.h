@@ -2,7 +2,9 @@
 #define _RESOURCE_MANAGER_H_
 
 #include <memory>
+
 #include "../BaseManager.h"
+
 #include "AnimationResource.h"
 #include "FontResource.h"
 #include "ImageResource.h"
@@ -60,10 +62,10 @@ private:
 	template <typename T> BaseMapManager<T>& get_map() const;
 
 	//hide it (singleton)
-	ResourceManager() {};
-	~ResourceManager() {};
-	ResourceManager(const ResourceManager&) {};
-	ResourceManager& operator=(const ResourceManager&) {};
+	ResourceManager() = default;
+	~ResourceManager() = default;
+	ResourceManager(const ResourceManager&) = delete;
+	ResourceManager& operator=(const ResourceManager&) = delete;
 };
 
 typedef ResourceManager RM;

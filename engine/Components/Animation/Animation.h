@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 #include <map>
+
 #include "../BaseComponent.h"
 #include "../../BaseObject.h"
 #include "../../ResourceManager/AnimationResource.h"
@@ -59,16 +60,15 @@ public:
 
 	Animation(const std::string& name, const unsigned int id);
 	~Animation();
+	Animation() = delete;
+	Animation(const Animation&) = delete;
+	Animation& operator=(const Animation&) = delete;
 private:
 	std::map<std::string, std::shared_ptr<AnimationResource>> stateMap;
 	Parameters params;
 
 	//references to other components
 	std::weak_ptr<Position> positionComp;
-
-	Animation();
-	Animation(const Animation&);
-	Animation& operator=(const Animation&);
 };
 
 #endif

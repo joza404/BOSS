@@ -2,6 +2,7 @@
 #define _COMPONENT_MANAGER_H_
 
 #include <memory>
+
 #include "..\BaseManager.h"
 #include "Position\Position.h"
 #include "Animation\Animation.h"
@@ -99,10 +100,10 @@ private:
 	template <typename T> UpdateManager<T>& get_map() const;
 
 	//hide it (singleton)
-	ComponentManager() {};
-	~ComponentManager() {};
-	ComponentManager(const ComponentManager&) {};
-	ComponentManager& operator=(const ComponentManager&) {};
+	ComponentManager() = default;
+	~ComponentManager() = default;
+	ComponentManager(const ComponentManager&) = delete;
+	ComponentManager& operator=(const ComponentManager&) = delete;
 };
 
 typedef ComponentManager CM;

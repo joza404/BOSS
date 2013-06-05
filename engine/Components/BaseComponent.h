@@ -7,6 +7,6 @@ public:
 	virtual ~BaseComponent() = 0;
 };
 //pure virtual destructor
-inline BaseComponent::~BaseComponent() {}
+inline BaseComponent::~BaseComponent() = default;
 
 #endif

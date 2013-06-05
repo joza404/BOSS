@@ -1,8 +1,10 @@
-#include "FontResource.h"
-#include <SDL_ttf.h>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
+
+#include <SDL_ttf.h>
+
+#include "FontResource.h"
 
 FontResource::FontResource(const std::string& path, const std::string& _name, const unsigned int _id) 
 	: BaseObject(_name, _id), font(nullptr)

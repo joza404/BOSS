@@ -14,13 +14,13 @@ public:
 	void set_y(int _y) { y = _y; }
 
 	Position(const std::string& name, const unsigned int id);
-	~Position() {};
+	~Position() = default;
+	Position() = delete;
+	Position(const Position&) = delete;
+	Position& operator=(const Position&) = delete;
+
 private:
 	int x, y;
-
-	Position();
-	Position(const Position&);
-	Position& operator=(const Position&);
 };
 
 #endif

@@ -66,6 +66,8 @@ public:
 
 	BaseMapManager() { id = 0; };
 	~BaseMapManager() { nameMap.clear(); idMap.clear(); };
+	BaseMapManager(const BaseMapManager&) = delete;
+	BaseMapManager& operator=(const BaseMapManager&) = delete;
 
 protected:
 	//using mutable to make "at" a const function (because it is called by const "get")
@@ -74,10 +76,6 @@ protected:
 
 	//each element of type T gets new unique id
 	unsigned int id;
-
-	//hide it
-	BaseMapManager(const BaseMapManager&) {};
-	BaseMapManager& operator=(const BaseMapManager&) {};
 };
 
 #endif

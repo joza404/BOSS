@@ -1,6 +1,7 @@
-#include "Renderer.h"
 #include <SDL_ttf.h>
 #include <SDL.h>
+
+#include "Renderer.h"
 
 //local macroses (in .cpp)
 #define WINDOW_SHOW_CURSOR 0

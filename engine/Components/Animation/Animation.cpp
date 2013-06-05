@@ -1,4 +1,5 @@
 #include <string>
+
 #include "Animation.h"
 #include "../../ResourceManager/ResourceManager.h"
 #include "../ComponentManager.h"

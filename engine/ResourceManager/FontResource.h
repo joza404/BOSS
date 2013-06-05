@@ -3,6 +3,7 @@
 
 #include <string>
 #include <SDL_ttf.h>
+
 #include "..\BaseObject.h"
 
 class FontResource : public BaseObject{
@@ -13,10 +14,9 @@ public:
 	FontResource(const std::string& path, const std::string& name, const unsigned int id);
 	~FontResource();
 
-private:
-	FontResource();
-	FontResource(const FontResource&);
-	FontResource& operator=(const FontResource&);
+	FontResource() = delete;
+	FontResource(const FontResource&) = delete;
+	FontResource& operator=(const FontResource&) = delete;
 };
 
 typedef FontResource FR;
