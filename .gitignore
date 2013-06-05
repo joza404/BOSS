@@ -1,6 +1,6 @@
-#Visual Studio files
-*.user
-
-#Visual Studio obj and bin directories
 bin/
-obj/
+engine/testFSM/
+engine/Lua/Binds.cpp
+engine/Lua/Binds.h
+engine/Input/
+game/fsm.lua
