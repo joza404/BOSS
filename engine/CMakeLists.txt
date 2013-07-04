@@ -1,6 +1,8 @@
 add_executable(boss 
 main.cpp
 
+Input/Input.cpp
+
 Components/Animation/Animation.cpp
 Components/Image/Image.cpp
 Components/Text/Text.cpp

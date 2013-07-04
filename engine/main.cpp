@@ -7,8 +7,11 @@
 #include <SDL.h>
 #include <Lua.hpp>
 #include <luaponte\luaponte.hpp>
+#include <luaponte\object.hpp>
 
 #include "globals.h"
+
+#include "Input\Input.h"
 
 #include "ResourceManager\ResourceManager.h"
 #include "ResourceManager\AnimationResource.h"
@@ -35,9 +38,11 @@ int main(int argc,char* argv[])
 	ResourceManager* rm = ResourceManager::get_instance();
 	ComponentManager* cm = ComponentManager::get_instance();
 	Lua* lua = Lua::get_instance();
+	Input* input = Input::get_instance();
 
 	r->create_window(WINDOW_CAPTION, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_BIT_FORMAT, WINDOW_FPS);
 	lua->bind_all();
+
 	lua->do_file(LUA_INIT_SCRIPT);	
 	
 	auto boy2 = cm->create_component<Animation>("boy2");
@@ -71,7 +76,7 @@ int main(int argc,char* argv[])
 	//game loop
 	while (true){
 		r->fps_start();
-
+		/*
 		SDL_PollEvent(&event);
 		if (event.type == SDL_KEYDOWN){
 			if (event.key.keysym.sym == SDLK_LEFT){
@@ -99,7 +104,8 @@ int main(int argc,char* argv[])
 				cm->get_component<Text>("text1")->set_color(0x00FFFFFF);
 				cm->get_component<Position>("random_position")->set_x(100);
 			}
-		}
+		}*/
+		input->handle();
 
 		cm->update_components();
 		r->render();

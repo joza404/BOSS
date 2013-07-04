@@ -5,6 +5,8 @@
 
 #include "Lua.h"
 
+#include "../Input/Input.h"
+
 #include "../ResourceManager/ResourceManager.h"
 #include "../ResourceManager/AnimationResource.h"
 #include "../ResourceManager/ImageResource.h"
@@ -44,6 +46,13 @@ Lua::~Lua()
 void Lua::bind_all()
 {
 	using namespace luaponte;
+
+	//bind the input global functions
+	module(state)
+	[
+		def("register_key", &bind_register_key),
+		def("key_pressed", &bind_key_pressed)
+	];
 
 	//bind the resource manager methods
 	module(state)
