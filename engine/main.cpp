@@ -28,6 +28,23 @@
 
 #include "Lua\Lua.h"
 
+class Testing{
+public:
+	void print() {std::cout << "BUR!\n\r";}
+	Testing() {std::cout << "Testing default constructor.\n\r";}
+	Testing(const Testing& test) {std::cout << "Testing copy constructor.\n\r";}
+	Testing& operator=(const Testing& test) {std::cout << "Testing operator=\n\r";}
+};
+
+class Bur{
+public:
+	Bur() {test2 = new Testing(); test3 = std::shared_ptr<Testing>(new Testing);}
+	Testing test1;
+	Testing* test2;
+	std::shared_ptr<Testing> test3;
+	Testing& get(){ return test1; }
+};
+
 int main(int argc,char* argv[])
 {
 	setlocale(LC_ALL, "russian_russia.1251");
@@ -42,6 +59,20 @@ int main(int argc,char* argv[])
 
 	r->create_window(WINDOW_CAPTION, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_BIT_FORMAT, WINDOW_FPS);
 	lua->bind_all();
+
+	using namespace luaponte;
+	module(lua->get_state())
+	[
+		class_<Bur>("Bur")
+		.def(constructor<>())
+		.def_readwrite("test1", &Bur::test1)
+		.def_readwrite("test2", &Bur::test2)
+		.def_readwrite("test3", &Bur::test3)
+		.def("get",&Bur::get),
+
+		class_<Testing, std::shared_ptr<Testing> >("Testing")
+		.def("print", &Testing::print)
+	];
 
 	lua->do_file(LUA_INIT_SCRIPT);	
 	
@@ -67,7 +98,7 @@ int main(int argc,char* argv[])
 	text1->set_resource(rm->get_resource<FontResource>("font1"));
 	text1->set_text("hello world!");
 
-	
+	luaponte::object    m_CurrentState;
 	cm->update_components();
 	r->render();
 

@@ -24,4 +24,24 @@ boy1:SetPosition(posBoy1);
 posBoy1:SetY(20);
 posBoy1:SetX(200);
 
+ho1 = Bur();
+ho2 = Bur();
+xxx = ho1:get();
+ho1.test1 = ho2.test2;
+ho1.test1:print();
+ho1.test2:print();
+
+gom = GameObjectManager.GetInstance();
+OrcWarriorFunction = {}
+OrcWarriorFunction["Execute"] = function(go)
+	print(go:AnimationExists());
+end
+gom:CreateObjectType("OrcWarrior", OrcWarriorFunction);
+gom:CreateObject("OrcWarrior", "Orc1");
+gom:CreateObject("OrcWarrior", "Orc2");
+gom:CreateObject("OrcWarrior", "Orc3");
+
+
+
+
 print("Initialization has completed.")

@@ -7,6 +7,9 @@
 
 #include "../Input/Input.h"
 
+#include "../GameObject/GameObject.h"
+#include "../GameObject/GameObjectManager.h"
+
 #include "../ResourceManager/ResourceManager.h"
 #include "../ResourceManager/AnimationResource.h"
 #include "../ResourceManager/ImageResource.h"
@@ -54,7 +57,43 @@ void Lua::bind_all()
 		def("key_pressed", &bind_key_pressed)
 	];
 
-	//bind the resource manager methods
+	//bind game object
+	module(state)
+	[
+		class_<GameObject>("GameObject")
+		.def_readwrite("animation", &GameObject::animation)
+		.def_readwrite("image", &GameObject::image)
+		.def_readwrite("text", &GameObject::text)
+		.def_readwrite("position", &GameObject::position)
+		.def_readwrite("movement", &GameObject::movement)
+		.def("AnimationExists", &GameObject::animation_exists)
+		.def("ImageExists", &GameObject::image_exists)
+		.def("TextExists", &GameObject::text_exists)
+		.def("PositionExists", &GameObject::position_exists)
+		.def("MovementExists", &GameObject::movement_exists)
+	];
+
+	//bind game object manager
+	module(state)
+	[
+		class_<GameObjectManager>("GameObjectManager")
+		.scope[def("GetInstance", &GameObjectManager::get_instance)]
+		.def("CreateObjectType", &GameObjectManager::create_object_type)
+		.def("CreateObject", &GameObjectManager::create_object)
+		.def("GetObject", &GameObjectManager::get_object)
+		.def("DeleteObject", (bool(GameObjectManager::*) (const std::string&, const std::string&)) &GameObjectManager::delete_object)
+		.def("DeleteObject", (bool(GameObjectManager::*) (GameObject&)) &GameObjectManager::delete_object)
+		.def("GlobalGetNext", &GameObjectManager::global_get_next)
+		.def("GlobalReset", &GameObjectManager::global_reset)
+		.def("GlobalEndReached", &GameObjectManager::global_end_reached)
+		.def("GlobalGetSize", &GameObjectManager::global_get_size)
+		.def("GetNext", &GameObjectManager::get_next)
+		.def("Reset", &GameObjectManager::reset)
+		.def("EndReached", &GameObjectManager::end_reached)
+		.def("GetSize", &GameObjectManager::get_size)
+	];
+
+	//bind the resource manager
 	module(state)
 	[
 		class_<AnimationResource>("AnimationResource"),
@@ -66,6 +105,17 @@ void Lua::bind_all()
 		.def("LoadImage", &ResourceManager::load_resource<ImageResource>)
 		.def("LoadFont", &ResourceManager::load_resource<FontResource>)
 		.scope[def("GetInstance", &ResourceManager::get_instance)]
+	];
+
+	//bind the component manager
+	module(state)
+	[
+		class_<ComponentManager>("Components")
+		.def("CreateAnimation", &ComponentManager::create_component<Animation>)
+		.def("CreateImage", &ComponentManager::create_component<Image>)
+		.def("CreateText", &ComponentManager::create_component<Text>)
+		.def("CreatePosition", &ComponentManager::create_component<Position>)
+		.scope[def("GetInstance", &ComponentManager::get_instance)]
 	];
 
 	//bind the position component
@@ -123,16 +173,5 @@ void Lua::bind_all()
 		.def("SetPosition", (void(Text::*) (const std::shared_ptr<Position>&)) &Text::set_position)
 		.def("SetPosition", (void(Text::*) (const std::string&)) &Text::set_position)
 		.def("UnsetPosition", &Text::unset_position)
-	];
-
-	//bind the component manager
-	module(state)
-	[
-		class_<ComponentManager>("Components")
-		.def("CreateAnimation", &ComponentManager::create_component<Animation>)
-		.def("CreateImage", &ComponentManager::create_component<Image>)
-		.def("CreateText", &ComponentManager::create_component<Text>)
-		.def("CreatePosition", &ComponentManager::create_component<Position>)
-		.scope[def("GetInstance", &ComponentManager::get_instance)]
 	];
 }

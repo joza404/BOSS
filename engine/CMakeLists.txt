@@ -7,12 +7,16 @@ Components/Animation/Animation.cpp
 Components/Image/Image.cpp
 Components/Text/Text.cpp
 Components/Position/Position.cpp
+Components/Movement/Movement.cpp
 
 Renderer/Renderer.cpp
 
 ResourceManager/AnimationResource.cpp
 ResourceManager/ImageResource.cpp
 ResourceManager/FontResource.cpp
+
+GameObject/GameObject.cpp
+GameObject/GameObjectManager.cpp
 
 Lua/Lua.cpp
 )
