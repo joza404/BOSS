@@ -35,6 +35,8 @@ gom = GameObjectManager.GetInstance();
 OrcWarriorFunction = {}
 OrcWarriorFunction["Execute"] = function(go)
 	print(go:AnimationExists());
+	print(go.typeName);
+	print(go.objectName);
 end
 gom:CreateObjectType("OrcWarrior", OrcWarriorFunction);
 gom:CreateObject("OrcWarrior", "Orc1");

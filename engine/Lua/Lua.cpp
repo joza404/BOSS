@@ -61,6 +61,8 @@ void Lua::bind_all()
 	module(state)
 	[
 		class_<GameObject>("GameObject")
+		.def_readonly("typeName", &GameObject::typeName)
+		.def_readonly("objectName", &GameObject::objectName)
 		.def_readwrite("animation", &GameObject::animation)
 		.def_readwrite("image", &GameObject::image)
 		.def_readwrite("text", &GameObject::text)
