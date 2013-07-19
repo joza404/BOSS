@@ -32,6 +32,7 @@ public:
 	bool movement_exists() { return movement != nullptr; }
 
 	GameObject(const std::string&, const std::string&);
+	GameObject(GameObject&&);
 	~GameObject();
 	GameObject() = delete;
 	GameObject(const GameObject&) = delete;

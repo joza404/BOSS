@@ -15,16 +15,19 @@
 struct GameObjectType{
 	const std::string typeName;
 	//the list of the game objects with the same type name
-	std::list< std::unique_ptr<GameObject> > goList;
+	std::list<GameObject> goList;
 
 	//lua function which will be called to init new object of this type 
 	luaponte::object function;
 
 	//iterator for a local roaming through the goList
-	std::list< std::unique_ptr<GameObject> >::iterator pgo_it;
+	std::list<GameObject>::iterator go_it;
 
 	GameObjectType(const std::string& _typeName, const luaponte::object& _function) 
 	: typeName(_typeName), function(_function) {};
+
+	GameObjectType(GameObjectType&& got) : goList(std::move(got.goList)), function(got.function)
+	, go_it(got.go_it), typeName(std::move(got.typeName)) {}
 };
 
 class GameObjectManager{
@@ -38,7 +41,7 @@ public:
 	//functions to operate with objects and types
 	void create_object_type(const std::string&, const luaponte::object&);
 	GameObject& create_object(const std::string&, const std::string&);
-	GameObject& get_object(const std::string&, const std::string&) const;
+	GameObject& get_object(const std::string&, const std::string&);
 	bool delete_object(const std::string&, const std::string&);
 	bool delete_object(GameObject&);
 
@@ -55,12 +58,12 @@ public:
 	int get_size(const std::string&) const;
 
 	//each map element contain the list of the game objects with the same type name
-	std::map<std::string, std::unique_ptr<GameObjectType> > typeMap;
+	std::map<std::string, GameObjectType> typeMap;
 
 private:
 	//iterators for a global roaming
-	std::map<std::string, std::unique_ptr<GameObjectType> >::iterator ptype_it;
-	std::list< std::unique_ptr<GameObject> >::iterator pgo_it;
+	std::map<std::string, GameObjectType>::iterator type_it;
+	std::list<GameObject>::iterator go_it;
 
 	//number of the all game objects
 	int global_size;
