@@ -6,15 +6,15 @@
 
 #include "../BaseComponent.h"
 #include "../../BaseObject.h"
-#include "../../ResourceManager/FontResource.h"
+#include "../../Resources/FontResource.h"
 #include "../Position/Position.h"
 
 class Text : public BaseComponent, public BaseObject{
 public:
 	//all Text parameters
 	struct Parameters{
-		SDL_Surface* textSurface;
-		std::shared_ptr<FontResource> resource;
+		SDL_Surface* textSurface = nullptr;
+		FontResource* resource = nullptr;
 
 		unsigned int renderLayer;
 		bool regedInRenderer;
@@ -33,7 +33,7 @@ public:
 	void update();
 
 	//set font resource
-	void set_resource(const std::shared_ptr<FontResource>& res);
+	void set_resource(FontResource& res);
 	void set_resource(const std::string& res);
 
 	//get/set render layer
@@ -53,11 +53,11 @@ public:
 	Parameters get_params() const { return params; }
 
 	//set references to other components
-	void set_position(const std::shared_ptr<Position>& pos) { positionComp = pos; }
+	void set_position(Position* pos) { positionComp = pos; }
 	void set_position(const std::string& pos);
-	void unset_position() { positionComp.reset(); }
+	void unset_position() { positionComp = nullptr; }
 
-	Text(const std::string& name, const unsigned int id);
+	Text(const std::string& name);
 	~Text();
 	Text() = delete;
 	Text(const Text&) = delete;
@@ -70,7 +70,7 @@ private:
 	bool redraw();
 
 	//references to other components
-	std::weak_ptr<Position> positionComp;
+	Position* positionComp = nullptr;
 };
 
 #endif

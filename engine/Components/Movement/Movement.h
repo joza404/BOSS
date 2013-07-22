@@ -2,6 +2,7 @@
 #define _MOVEMENT_H_
 
 #include <memory>
+
 #include "../../BaseObject.h"
 #include "../BaseComponent.h"
 #include "../Position/Position.h"
@@ -13,11 +14,11 @@ public:
 	void set_velocity(int, int);
 
 	//set references to other components
-	void set_position(const std::shared_ptr<Position>& pos) { positionComp = pos; }
+	void set_position(Position* pos) { positionComp = pos; }
 	void set_position(const std::string& pos);
-	void unset_position() { positionComp.reset(); }
+	void unset_position() { positionComp = nullptr; }
 
-	Movement(const std::string& name, const unsigned int id);
+	Movement(const std::string& name);
 	~Movement() = default;
 	Movement() = delete;
 	Movement(const Movement&) = delete;
@@ -27,7 +28,7 @@ private:
 	int xVel, yVel;
 
 	//references to other components
-	std::weak_ptr<Position> positionComp;
+	Position* positionComp;
 };
 
 #endif

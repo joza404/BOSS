@@ -1,6 +1,6 @@
 #include "Text.h"
-#include "../../ResourceManager/FontResource.h"
-#include "../../ResourceManager/ResourceManager.h"
+#include "../../Resources/FontResource.h"
+#include "../../Resources/ResourceManager.h"
 #include "../../Renderer/Renderer.h"
 #include "../ComponentManager.h"
 
@@ -21,49 +21,48 @@ void Text::update()
 	}
 
 	//if position component exists
-	if (positionComp.expired() == false){
-		auto shared = positionComp.lock();
-		params.x = shared->get_x();
-		params.y = shared->get_y();
+	if (positionComp != nullptr){
+		params.x = positionComp->get_x();
+		params.y = positionComp->get_y();
 	}
 }
 
-void Text::set_resource(const std::shared_ptr<FontResource>& res)
+void Text::set_resource(FontResource& res)
 {
-	params.resource = res;
-	params.size = res->size;
+	params.resource = &res;
+	params.size = res.size;
 
 	//first time here
 	if (params.regedInRenderer == false){
-		Renderer::get_instance()->register_component(this, params.renderLayer);
+		Renderer::get_instance().register_component(this, params.renderLayer);
 		params.regedInRenderer = true;
 	}
 }
 
 void Text::set_resource(const std::string& res)
 {
-	auto resource = ResourceManager::get_instance()->get_resource<FontResource>(res);
-	params.resource = resource;
-	params.size = resource->size;
+	FontResource& resource = ResourceManager::get_instance().get_font_res(res);
+	params.resource = &resource;
+	params.size = resource.size;
 
 	//first time here
 	if (params.regedInRenderer == false){
-		Renderer::get_instance()->register_component(this, params.renderLayer);
+		Renderer::get_instance().register_component(this, params.renderLayer);
 		params.regedInRenderer = true;
 	}
 }
 
 bool Text::set_layer(unsigned int layer)
 {
-	Renderer* renderer = Renderer::get_instance();
-	if (renderer->last_layer() > layer)
+	Renderer& renderer = Renderer::get_instance();
+	if (renderer.last_layer() > layer)
 		return false;
 
 	params.renderLayer = layer;
 	//if registred in render
 	if (params.regedInRenderer == true){
-		renderer->unregister_component(this, params.renderLayer);
-		renderer->register_component(this, layer);
+		renderer.unregister_component(this, params.renderLayer);
+		renderer.register_component(this, layer);
 	}	
 	return true;
 }
@@ -113,10 +112,10 @@ bool Text::redraw()
 
 void Text::set_position(const std::string& pos)
 {
-	positionComp = ComponentManager::get_instance()->get_component<Position>(pos);
+	positionComp = ComponentManager::get_instance().get_position_comp(pos);
 }
 
-Text::Text(const std::string& _name, const unsigned int _id) : BaseObject(_name, _id)
+Text::Text(const std::string& _name) : BaseObject(_name)
 {
 	params.renderLayer = DEFAULT_RENDER_LAYER;
 	params.x = DEFAULT_X;
@@ -133,5 +132,5 @@ Text::Text(const std::string& _name, const unsigned int _id) : BaseObject(_name,
 Text::~Text()
 {
 	if (params.regedInRenderer == true)
-		Renderer::get_instance()->unregister_component(this, params.renderLayer);
+		Renderer::get_instance().unregister_component(this, params.renderLayer);
 }

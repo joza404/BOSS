@@ -6,8 +6,8 @@
 
 #include "FontResource.h"
 
-FontResource::FontResource(const std::string& path, const std::string& _name, const unsigned int _id) 
-	: BaseObject(_name, _id), font(nullptr)
+FontResource::FontResource(const std::string& _name, const std::string& path) 
+	: BaseObject(_name)
 {
 	std::ifstream file;
 	std::string buffer;
@@ -45,7 +45,14 @@ FontResource::FontResource(const std::string& path, const std::string& _name, co
 	}
 }
 
+FontResource::FontResource(FontResource&& fr) : BaseObject( std::move(static_cast<BaseObject&>(fr)) )
+{
+	font = fr.font;
+	fr.font = nullptr;
+	size = fr.size;
+}
+
 FontResource::~FontResource()
 {
-	TTF_CloseFont(this->font);
+	if (font != nullptr) TTF_CloseFont(this->font);
 }

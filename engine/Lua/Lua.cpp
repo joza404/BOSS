@@ -10,16 +10,17 @@
 #include "../GameObject/GameObject.h"
 #include "../GameObject/GameObjectManager.h"
 
-#include "../ResourceManager/ResourceManager.h"
-#include "../ResourceManager/AnimationResource.h"
-#include "../ResourceManager/ImageResource.h"
-#include "../ResourceManager/FontResource.h"
+#include "../Resources/ResourceManager.h"
+#include "../Resources/AnimationResource.h"
+#include "../Resources/ImageResource.h"
+#include "../Resources/FontResource.h"
 
 #include "../Components/ComponentManager.h"
 #include "../Components/Animation/Animation.h"
 #include "../Components/Image/Image.h"
 #include "../Components/Position/Position.h"
 #include "../Components/Text/Text.h"
+#include "../Components/Movement.h"
 
 //executes a script
 bool Lua::do_file(const std::string& path)
@@ -101,22 +102,40 @@ void Lua::bind_all()
 		class_<AnimationResource>("AnimationResource"),
 		class_<ImageResource>("ImageResource"),
 		class_<FontResource>("FontResource"),
+		class_<RigidBodyResource>("RigidBodyResource"),
 
-		class_<ResourceManager>("Resources")
-		.def("LoadAnimation", &ResourceManager::load_resource<AnimationResource>)
-		.def("LoadImage", &ResourceManager::load_resource<ImageResource>)
-		.def("LoadFont", &ResourceManager::load_resource<FontResource>)
+		class_<ResourceManager>("ResourceManager")
+		.def("LoadAnimationResource", &ResourceManager::load_animation_res)
+		.def("LoadImageResource", &ResourceManager::load_image_res)
+		.def("LoadFontResource", &ResourceManager::load_font_res)
+		.def("LoadRigidBodyResource", &ResourceManager::load_rigidbody_res)
+		.def("GetAnimationResource", &ResourceManager::get_animation_res)
+		.def("GetImageResource", &ResourceManager::get_image_res)
+		.def("GetFontResource", &ResourceManager::get_font_res)
+		.def("GetRigidBodyResource", &ResourceManager::get_rigidbody_res)		
 		.scope[def("GetInstance", &ResourceManager::get_instance)]
 	];
 
 	//bind the component manager
 	module(state)
 	[
-		class_<ComponentManager>("Components")
-		.def("CreateAnimation", &ComponentManager::create_component<Animation>)
-		.def("CreateImage", &ComponentManager::create_component<Image>)
-		.def("CreateText", &ComponentManager::create_component<Text>)
-		.def("CreatePosition", &ComponentManager::create_component<Position>)
+		class_<ComponentManager>("ComponentManager")
+		.def("CreateAnimationComponent", &ComponentManager::create_animation_comp)
+		.def("CreateImageComponent", &ComponentManager::create_image_comp)
+		.def("CreateTextComponent", &ComponentManager::create_text_comp)
+		.def("CreatePositionComponent", &ComponentManager::create_position_comp)
+		.def("GetAnimationComponent", &ComponentManager::get_animation_comp)
+		.def("GetImageComponent", &ComponentManager::get_image_comp)
+		.def("GetTextComponent", &ComponentManager::get_text_comp)
+		.def("GetPositionComponent", &ComponentManager::get_position_comp)
+		.def("DestroyAnimationComponent", (void(ComponentManager::*) (const std::string&)) &ComponentManager::delete_animation_comp)
+		.def("DestroyImageComponent", (void(ComponentManager::*) (const std::string&)) &ComponentManager::delete_image_comp)
+		.def("DestroyTextComponent", (void(ComponentManager::*) (const std::string&)) &ComponentManager::delete_text_comp)
+		.def("DestroyPositionComponent", (void(ComponentManager::*) (const std::string&)) &ComponentManager::delete_position_comp)
+		.def("DestroyAnimationComponent", (void(ComponentManager::*) (Animation*)) &ComponentManager::delete_animation_comp)
+		.def("DestroyImageComponent", (void(ComponentManager::*) (Image*)) &ComponentManager::delete_image_comp)
+		.def("DestroyTextComponent", (void(ComponentManager::*) (Text*)) &ComponentManager::delete_text_comp)
+		.def("DestroyPositionComponent", (void(ComponentManager::*) (Position*)) &ComponentManager::delete_position_comp)
 		.scope[def("GetInstance", &ComponentManager::get_instance)]
 	];
 
@@ -134,15 +153,15 @@ void Lua::bind_all()
 	module(state)
 	[
 		class_<Animation>("Animation")
-		.def("AddState", (bool(Animation::*) (const std::string&, const std::string&)) &Animation::add_state)
-		.def("AddState", (bool(Animation::*) (const std::string&, const std::shared_ptr<AnimationResource>&)) &Animation::add_state)
+		.def("AddState", (void(Animation::*) (const std::string&, const std::string&)) &Animation::add_state)
+		.def("AddState", (void(Animation::*) (const std::string&, AnimationResource&)) &Animation::add_state)
 		.def("SetState", &Animation::set_state)
 		.def("GetState", &Animation::get_state)
 		.def("SetSpeed", &Animation::set_speed)
 		.def("GetSpeed", &Animation::get_speed)
 		.def("SetLayer", &Animation::set_layer)
 		.def("GetLayer", &Animation::get_layer)
-		.def("SetPosition", (void(Animation::*) (const std::shared_ptr<Position>&)) &Animation::set_position)
+		.def("SetPosition", (void(Animation::*) (Position*)) &Animation::set_position)
 		.def("SetPosition", (void(Animation::*) (const std::string&)) &Animation::set_position)
 		.def("UnsetPosition", &Animation::unset_position)
 	];
@@ -151,11 +170,11 @@ void Lua::bind_all()
 	module(state)
 	[
 		class_<Image>("Image")
-		.def("SetResource", (void(Image::*) (const std::shared_ptr<ImageResource>&)) &Image::set_resource)
+		.def("SetResource", (void(Image::*) (ImageResource&)) &Image::set_resource)
 		.def("SetResource", (void(Image::*) (const std::string&)) &Image::set_resource)
 		.def("SetLayer", &Image::set_layer)
 		.def("GetLayer", &Image::get_layer)
-		.def("SetPosition", (void(Image::*) (const std::shared_ptr<Position>&)) &Image::set_position)
+		.def("SetPosition", (void(Image::*) (Position*)) &Image::set_position)
 		.def("SetPosition", (void(Image::*) (const std::string&)) &Image::set_position)
 		.def("UnsetPosition", &Image::unset_position)
 	];
@@ -164,7 +183,7 @@ void Lua::bind_all()
 	module(state)
 	[
 		class_<Text>("Text")
-		.def("SetResource", (void(Text::*) (const std::shared_ptr<FontResource>&)) &Text::set_resource)
+		.def("SetResource", (void(Text::*) (FontResource&)) &Text::set_resource)
 		.def("SetResource", (void(Text::*) (const std::string&)) &Text::set_resource)
 		.def("SetLayer", &Text::set_layer)
 		.def("GetLayer", &Text::get_layer)
@@ -172,8 +191,18 @@ void Lua::bind_all()
 		.def("GetText", &Text::get_text)
 		.def("SetColor", (void(Text::*) (int)) &Text::set_color)
 		.def("GetColor", &Text::get_color)
-		.def("SetPosition", (void(Text::*) (const std::shared_ptr<Position>&)) &Text::set_position)
+		.def("SetPosition", (void(Text::*) (Position*)) &Text::set_position)
 		.def("SetPosition", (void(Text::*) (const std::string&)) &Text::set_position)
 		.def("UnsetPosition", &Text::unset_position)
+	];
+
+	//bind the movement component
+	module(state)
+	[
+		class_<Movement>("Movement")
+		.def("SetVelocity", &Movement::set_velocity)
+		.def("SetPosition", (void(Text::*) (Position*)) &Movement::set_position)
+		.def("SetPosition", (void(Text::*) (const std::string&)) &Movement::set_position)
+		.def("UnsetPosition", &Movement::unset_position)
 	];
 }

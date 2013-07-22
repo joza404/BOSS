@@ -8,8 +8,8 @@
 #include "AnimationResource.h"
 #include "../Renderer/Renderer.h"
 
-AnimationResource::AnimationResource(const std::string& path, const std::string& _name, const unsigned int _id) 
-	: BaseObject(_name, _id), image(nullptr)
+AnimationResource::AnimationResource(const std::string& _name, const std::string& path) 
+	: BaseObject(_name)
 {
 	std::ifstream file;
 	std::string buffer;
@@ -24,11 +24,12 @@ AnimationResource::AnimationResource(const std::string& path, const std::string&
 		}
 
 		//read the parameters
-		file >> spriteCount;
+		file >> spriteNumber;
 		file >> std::hex >> transColor;
 
 		//read the image path
 		file >> buffer;
+
 		image = IMG_Load(buffer.c_str());
 		if (image == nullptr){
 			throw std::runtime_error("Error. The image format is not valid.");
@@ -37,6 +38,7 @@ AnimationResource::AnimationResource(const std::string& path, const std::string&
 		#ifdef _DEBUG
 			std::cout << "The resource " << buffer << " has been loaded." << std::endl;
 		#endif
+
 		file.close();
 	}
 	catch (...) {
@@ -47,12 +49,21 @@ AnimationResource::AnimationResource(const std::string& path, const std::string&
 		throw;
 	}
 
-	Renderer* renderer = Renderer::get_instance();
-	renderer->convert_format(this);
-	renderer->set_color_key(this);
+	Renderer& renderer = Renderer::get_instance();
+	renderer.convert_format(*this);
+	renderer.set_color_key(*this);
+	
+}
+
+AnimationResource::AnimationResource(AnimationResource&& ar) : BaseObject( std::move(static_cast<BaseObject&>(ar)) )
+{
+	image = ar.image;
+	ar.image = nullptr;
+	spriteNumber = ar.spriteNumber;
+	transColor = ar.transColor;
 }
 
 AnimationResource::~AnimationResource()
 {
-	SDL_FreeSurface(image);
+	if (image != nullptr) SDL_FreeSurface(image);
 }

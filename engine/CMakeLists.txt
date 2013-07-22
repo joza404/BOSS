@@ -8,12 +8,15 @@ Components/Image/Image.cpp
 Components/Text/Text.cpp
 Components/Position/Position.cpp
 Components/Movement/Movement.cpp
+Components/ComponentManager.cpp
 
 Renderer/Renderer.cpp
 
-ResourceManager/AnimationResource.cpp
-ResourceManager/ImageResource.cpp
-ResourceManager/FontResource.cpp
+Resources/AnimationResource.cpp
+Resources/ImageResource.cpp
+Resources/FontResource.cpp
+Resources/RigidBodyResource.cpp
+Resources/ResourceManager.cpp
 
 GameObject/GameObject.cpp
 GameObject/GameObjectManager.cpp

@@ -8,10 +8,9 @@
 void Movement::update()
 {
 	//if position component exists
-	if (positionComp.expired() == false){
-		auto shared = positionComp.lock();
-		shared->set_x(shared->get_x() + xVel);
-		shared->set_y(shared->get_y() + yVel);
+	if (positionComp != nullptr){
+		positionComp->set_x(positionComp->get_x() + xVel);
+		positionComp->set_y(positionComp->get_y() + yVel);
 	}
 }
 
@@ -24,10 +23,10 @@ void Movement::set_velocity(int _xVel, int _yVel)
 //set references to other components
 void Movement::set_position(const std::string& pos)
 {
-	positionComp = ComponentManager::get_instance()->get_component<Position>(pos);
+	positionComp = ComponentManager::get_instance().get_position_comp(pos);
 }
 
-Movement::Movement(const std::string& _name, const unsigned int _id) : BaseObject(_name, _id)
+Movement::Movement(const std::string& _name) : BaseObject(_name)
 {
 	xVel = DEFAULT_X_VELOCITY;
 	yVel = DEFAULT_Y_VELOCITY;

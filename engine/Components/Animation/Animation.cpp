@@ -1,7 +1,7 @@
 #include <string>
 
 #include "Animation.h"
-#include "../../ResourceManager/ResourceManager.h"
+#include "../../Resources/ResourceManager.h"
 #include "../ComponentManager.h"
 #include "../../Renderer/Renderer.h"
 
@@ -11,6 +11,7 @@
 #define DEFAULT_X 0
 #define DEFAULT_Y 0
 
+//component update function
 void Animation::update()
 {
 	params.frameToWait--;
@@ -44,26 +45,28 @@ void Animation::update()
 	}
 
 	//if position component exists
-	if (positionComp.expired() == false){
-		auto shared = positionComp.lock();
-		params.x = shared->get_x();
-		params.y = shared->get_y();
+	if (positionComp != nullptr){
+		params.x = positionComp->get_x();
+		params.y = positionComp->get_y();
 	}
 }
 
-bool Animation::add_state(const std::string& stateName, const std::string& resName)
+//the resource also has to be inside res manager 
+void Animation::add_state(const std::string& stateName, const std::string& resName)
 {
-	auto res = ResourceManager::get_instance()->get_resource<AnimationResource>(resName);
-	if (!res) return false;
-	stateMap[stateName] = res;
-	return true;
+	AnimationResource& res = ResourceManager::get_instance().get_animation_res(resName);
+	stateMap.insert( std::make_pair(stateName, &res) );
 }
 
-bool Animation::add_state(const std::string& stateName, const std::shared_ptr<AnimationResource>& res)
+void Animation::add_state(const std::string& stateName, AnimationResource& res)
 {
-	if (!res) return false;
-	stateMap[stateName] = res;
-	return true;
+	stateMap.insert( std::make_pair(stateName, &res) );
+}
+
+//get/set current state
+std::string Animation::get_state() const 
+{ 
+	return params.currentStateName; 
 }
 
 bool Animation::set_state(const std::string& stateName)
@@ -75,7 +78,7 @@ bool Animation::set_state(const std::string& stateName)
 
 	params.currentStateName = stateName;
 	params.currentResource = it->second;
-	params.spriteCount = it->second->spriteCount;
+	params.spriteCount = it->second->spriteNumber;
 	params.currentSprite = 0;
 	params.sprite_x_offset = 0;
 	params.sprite_y_offset = 0;
@@ -86,24 +89,16 @@ bool Animation::set_state(const std::string& stateName)
 
 	//first time here
 	if (params.regedInRenderer == false){
-		Renderer::get_instance()->register_component(this, params.renderLayer);
+		Renderer::get_instance().register_component(this, params.renderLayer);
 		params.regedInRenderer = true;
 	}
 	return true;
 }
 
-bool Animation::set_layer(unsigned int layer)
-{
-	Renderer* renderer = Renderer::get_instance();
-	if (renderer->last_layer() > layer)
-		return false;
-
-	params.renderLayer = layer;
-	if (params.regedInRenderer == true){
-		renderer->unregister_component(this, params.renderLayer);	
-		renderer->register_component(this, layer);
-	}
-	return true;
+//get/set animation speed
+unsigned int Animation::get_speed() const 
+{ 
+	return params.animationSpeed; 
 }
 
 void Animation::set_speed(unsigned int s)
@@ -112,12 +107,49 @@ void Animation::set_speed(unsigned int s)
 	params.speed_changed = true;
 }
 
-void Animation::set_position(const std::string& pos)
+//get/set render layer
+bool Animation::set_layer(unsigned int layer)
 {
-	positionComp = ComponentManager::get_instance()->get_component<Position>(pos);
+	Renderer& renderer = Renderer::get_instance();
+	if (renderer.last_layer() > layer)
+		return false;
+
+	params.renderLayer = layer;
+	if (params.regedInRenderer == true){
+		renderer.unregister_component(this, params.renderLayer);	
+		renderer.register_component(this, layer);
+	}
+	return true;
 }
 
-Animation::Animation(const std::string& _name, const unsigned int _id) :  BaseObject(_name, _id)
+unsigned int Animation::get_layer() const 
+{ 
+	return params.renderLayer; 
+}
+
+//returns copy of current parameters
+Animation::Parameters Animation::get_params() const 
+{ 
+	return params; 
+}
+
+//set references to other components
+void Animation::set_position(const std::string& name)
+{
+	positionComp = ComponentManager::get_instance().get_position_comp(name);
+}
+
+void Animation::set_position(Position* pos)
+{ 
+	positionComp = pos; 
+}
+
+void Animation::unset_position() 
+{ 
+	positionComp = nullptr;
+}
+
+Animation::Animation(const std::string& _name) :  BaseObject(_name)
 {
 	params.animationSpeed = DEFAULT_ANIMATION_SPEED;
 	params.currentSprite = 0;
@@ -132,10 +164,11 @@ Animation::Animation(const std::string& _name, const unsigned int _id) :  BaseOb
 	params.sprite_y_offset = 0;
 	params.state_changed = false;
 	params.regedInRenderer = false;
+	positionComp = nullptr;
 }
 
 Animation::~Animation()
 {
 	if (params.regedInRenderer == true)
-		Renderer::get_instance()->unregister_component(this, params.renderLayer);
+		Renderer::get_instance().unregister_component(this, params.renderLayer);
 }

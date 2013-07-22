@@ -9,8 +9,8 @@
 #include "../BaseObject.h"
 #include "../Renderer/Renderer.h"
 
-ImageResource::ImageResource(const std::string& path, const std::string& _name, const unsigned int _id)
-	: BaseObject(_name, _id), image(nullptr)
+ImageResource::ImageResource(const std::string& _name, const std::string& path)
+	: BaseObject(_name)
 {
 	std::ifstream file;
 	std::string buffer;
@@ -44,10 +44,16 @@ ImageResource::ImageResource(const std::string& path, const std::string& _name, 
 		throw;
 	}
 	
-	Renderer::get_instance()->convert_format(this);
+	Renderer::get_instance().convert_format(*this);
+}
+
+ImageResource::ImageResource(ImageResource&& ir) : BaseObject( std::move(static_cast<BaseObject&>(ir)) )
+{
+	image = ir.image;
+	ir.image = nullptr;
 }
 
 ImageResource::~ImageResource()
 {
-	SDL_FreeSurface(image);
+	if (image != nullptr) SDL_FreeSurface(image);
 }

@@ -33,10 +33,11 @@ public:
 
 	GameObject(const std::string&, const std::string&);
 	GameObject(GameObject&&);
-	~GameObject();
+	
 	GameObject() = delete;
 	GameObject(const GameObject&) = delete;
 	GameObject& operator=(const GameObject&) = delete;
+	~GameObject() = default;
 };
 
 typedef GameObject GO;

@@ -13,7 +13,7 @@ public:
 	int get_y() const { return y; }
 	void set_y(int _y) { y = _y; }
 
-	Position(const std::string& name, const unsigned int id);
+	Position(const std::string& name);
 	~Position() = default;
 	Position() = delete;
 	Position(const Position&) = delete;

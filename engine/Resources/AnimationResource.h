@@ -8,11 +8,12 @@
 
 class AnimationResource : public BaseObject{
 public:	
-	SDL_Surface* image;
-	unsigned int spriteCount;
+	SDL_Surface* image = nullptr;
+	unsigned int spriteNumber;
 	int transColor;
 
-	AnimationResource(const std::string& path, const std::string& name, const unsigned int id);
+	AnimationResource(const std::string& name, const std::string& path);
+	AnimationResource(AnimationResource&&);
 	~AnimationResource();
 
 	AnimationResource() = delete;

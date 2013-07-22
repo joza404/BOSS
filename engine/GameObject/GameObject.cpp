@@ -15,8 +15,3 @@ GameObject::GameObject(const std::string& _typeName, const std::string& _objectN
  	position = go.position;
  	movement = go.movement;
  }
-
- GameObject::~GameObject()
- {
-
- }

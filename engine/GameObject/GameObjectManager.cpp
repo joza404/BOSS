@@ -1,5 +1,25 @@
 #include "GameObjectManager.h"
 
+GameObjectType::GameObjectType(const std::string& _typeName, const luaponte::object& _function) 
+: typeName(_typeName), function(_function)
+{
+
+}
+
+GameObjectType::GameObjectType(GameObjectType&& got) : goList(std::move(got.goList)), function(got.function)
+, go_it(got.go_it), typeName(std::move(got.typeName)) 
+{
+
+}
+
+//creates singleton
+GameObjectManager& GOM::get_instance()
+{
+	static GameObjectManager singleton;
+	return singleton;
+}
+
+
 //functions to operate with objects and types
 void GOM::create_object_type(const std::string& typeName, const luaponte::object& function)
 {
@@ -12,7 +32,7 @@ GameObject& GOM::create_object(const std::string& typeName, const std::string& o
 	//creating game object
 	type.goList.push_back( GameObject(typeName, objectName) );
 	//calling Lua function and passing game object to it
-	type.function["Execute"](&type.goList.back());
+	type.function["Initialize"](&type.goList.back());
 
 	return type.goList.back();
 }
@@ -32,6 +52,8 @@ bool GOM::delete_object(const std::string& typeName, const std::string& objectNa
 	auto& type = typeMap.at(typeName);
 	for(auto it = type.goList.begin(), end = type.goList.end(); it != end; ++it){
 		if (it->objectName == objectName){
+			//calling Lua function and passing game object to it
+			type.function["Release"](&(*it));
 			type.goList.erase(it);
 			return true;
 		}
@@ -46,6 +68,8 @@ bool GOM::delete_object(GameObject& go)
 	auto& type = typeMap.at(typeName);
 	for(auto it = type.goList.begin(), end = type.goList.end(); it != end; ++it){
 		if (it->objectName == objectName){
+			//calling Lua function and passing game object to it
+			type.function["Release"](&(*it));
 			type.goList.erase(it);
 			return true;
 		}

@@ -12,31 +12,31 @@
 
 #include "GameObject.h"
 
-struct GameObjectType{
+class GameObjectType{
+public:
 	const std::string typeName;
 	//the list of the game objects with the same type name
 	std::list<GameObject> goList;
 
 	//lua function which will be called to init new object of this type 
-	luaponte::object function;
+	const luaponte::object function;
 
 	//iterator for a local roaming through the goList
 	std::list<GameObject>::iterator go_it;
 
-	GameObjectType(const std::string& _typeName, const luaponte::object& _function) 
-	: typeName(_typeName), function(_function) {};
+	GameObjectType(const std::string&, const luaponte::object&);
+	GameObjectType(GameObjectType&&);
 
-	GameObjectType(GameObjectType&& got) : goList(std::move(got.goList)), function(got.function)
-	, go_it(got.go_it), typeName(std::move(got.typeName)) {}
+	GameObjectType() = delete;
+	GameObjectType(const GameObjectType&) = delete;
+	GameObjectType& operator=(const GameObjectType&) = delete;
+	~GameObjectType() = default;
 };
 
 class GameObjectManager{
 public:
 	//creates singleton
-	static GameObjectManager* get_instance(){
-		static GameObjectManager singleton;
-		return &singleton;
-	}
+	static GameObjectManager& get_instance();
 
 	//functions to operate with objects and types
 	void create_object_type(const std::string&, const luaponte::object&);

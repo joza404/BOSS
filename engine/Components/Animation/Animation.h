@@ -7,14 +7,14 @@
 
 #include "../BaseComponent.h"
 #include "../../BaseObject.h"
-#include "../../ResourceManager/AnimationResource.h"
+#include "../../Resources/AnimationResource.h"
 #include "../Position/Position.h"
 
 class Animation : public BaseComponent, public BaseObject{
 public:
 	//all Animations parameters
 	struct Parameters{
-		std::shared_ptr<AnimationResource> currentResource;
+		AnimationResource* currentResource = nullptr;
 		std::string currentStateName;
 
 		unsigned int animationSpeed;
@@ -36,39 +36,41 @@ public:
 	void update();
 
 	//the resource also has to be inside res manager 
-	bool add_state(const std::string& stateName, const std::string& resName);
-	bool add_state(const std::string& stateName, const std::shared_ptr<AnimationResource>& res);
+	void add_state(const std::string& stateName, const std::string& resName);
+	void add_state(const std::string& stateName, AnimationResource& res);
+
 	//get/set current state
-	std::string get_state() const { return params.currentStateName; }
-	bool set_state(const std::string& stateName);
+	std::string get_state() const;
+	bool set_state(const std::string&);
 
 	//get/set animation speed
-	unsigned int get_speed() const { return params.animationSpeed; }
-	void set_speed(unsigned int s);
+	unsigned int get_speed() const;
+	void set_speed(unsigned int);
 
 	//get/set render layer
-	unsigned int get_layer() const { return params.renderLayer; }
-	bool set_layer(unsigned int layer);
+	unsigned int get_layer() const;
+	bool set_layer(unsigned int);
 
 	//returns copy of current parameters
-	Parameters get_params() const { return params; }
+	Parameters get_params() const;
 
 	//set references to other components
-	void set_position(const std::shared_ptr<Position>& pos) { positionComp = pos; }
-	void set_position(const std::string& pos);
-	void unset_position() { positionComp.reset(); }
+	void set_position(Position* pos);
+	void set_position(const std::string&);
+	void unset_position();
 
-	Animation(const std::string& name, const unsigned int id);
+	Animation(const std::string& name);
 	~Animation();
 	Animation() = delete;
 	Animation(const Animation&) = delete;
 	Animation& operator=(const Animation&) = delete;
+
 private:
-	std::map<std::string, std::shared_ptr<AnimationResource>> stateMap;
+	std::map<std::string, AnimationResource*> stateMap;
 	Parameters params;
 
 	//references to other components
-	std::weak_ptr<Position> positionComp;
+	Position* positionComp = nullptr;
 };
 
 #endif

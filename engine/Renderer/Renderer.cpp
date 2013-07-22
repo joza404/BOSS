@@ -6,6 +6,12 @@
 //local macroses (in .cpp)
 #define WINDOW_SHOW_CURSOR 0
 
+//creates singleton
+Renderer& Renderer::get_instance(){
+	static Renderer singleton;
+	return singleton;
+}
+
 void Renderer::create_window(const std::string& caption, unsigned int width, unsigned int height,
 					   unsigned int bitFormat, unsigned int FPS)
 {
@@ -57,30 +63,30 @@ void Renderer::fps_end()
 }
 
 //resources call it from its constructors
-void Renderer::set_color_key(AnimationResource* ares)
+void Renderer::set_color_key(AnimationResource& ares)
 {
 	Uint8 r, g, b;
-	r = (ares->transColor >> 16) & 0x000000FF;
-	g = (ares->transColor >> 8) & 0x000000FF;
-	b = (ares->transColor) & 0x000000FF;
+	r = (ares.transColor >> 16) & 0x000000FF;
+	g = (ares.transColor >> 8) & 0x000000FF;
+	b = (ares.transColor) & 0x000000FF;
 
-	SDL_SetColorKey(ares->image, SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, r, g, b));
+	SDL_SetColorKey(ares.image, SDL_SRCCOLORKEY | SDL_RLEACCEL, SDL_MapRGB(screen->format, r, g, b));
 }
 
-void Renderer::convert_format(AnimationResource* ares)
+void Renderer::convert_format(AnimationResource& ares)
 {
 	SDL_Surface* optimizedImage;
-	optimizedImage = SDL_DisplayFormat(ares->image);
-	SDL_FreeSurface(ares->image);
-	ares->image = optimizedImage;
+	optimizedImage = SDL_DisplayFormat(ares.image);
+	SDL_FreeSurface(ares.image);
+	ares.image = optimizedImage;
 }
 
-void Renderer::convert_format(ImageResource* ires)
+void Renderer::convert_format(ImageResource& ires)
 {
 	SDL_Surface* optimizedImage;
-	optimizedImage = SDL_DisplayFormat(ires->image);
-	SDL_FreeSurface(ires->image);
-	ires->image = optimizedImage;
+	optimizedImage = SDL_DisplayFormat(ires.image);
+	SDL_FreeSurface(ires.image);
+	ires.image = optimizedImage;
 }
 
 unsigned int Renderer::last_layer() const

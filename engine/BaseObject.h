@@ -6,10 +6,10 @@
 class BaseObject{
 public:
 	const std::string name;
-	const unsigned int id;
 
-	BaseObject(const std::string& _name, const unsigned int _id) 
-		: name(_name), id(_id) {}
+	BaseObject(const std::string& _name) 
+		: name(_name) {}
+	BaseObject(BaseObject&& bo) : name(std::move(bo.name)) {}
 	virtual ~BaseObject() = 0;
 
 	BaseObject() = delete;

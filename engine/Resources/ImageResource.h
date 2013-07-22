@@ -8,9 +8,10 @@
 
 class ImageResource : public BaseObject{
 public:
-	SDL_Surface* image;
+	SDL_Surface* image = nullptr;
 
-	ImageResource(const std::string& path, const std::string& name, const unsigned int id);
+	ImageResource(const std::string& name, const std::string& path);
+	ImageResource(ImageResource&&);
 	~ImageResource();
 
 	ImageResource() = delete;

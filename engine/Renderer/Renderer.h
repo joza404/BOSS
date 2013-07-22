@@ -7,8 +7,8 @@
 
 #include <SDL.h>
 
-#include "../ResourceManager/AnimationResource.h"
-#include "../ResourceManager/ImageResource.h"
+#include "../Resources/AnimationResource.h"
+#include "../Resources/ImageResource.h"
 #include "../Components/Animation/Animation.h"
 #include "../Components/Image/Image.h"
 #include "../Components/Text/Text.h"
@@ -19,11 +19,8 @@
 class Renderer{
 public:
 	//creates singleton
-	static Renderer* get_instance(){
-		static Renderer singleton;
-		return &singleton;
-	}
-	
+	static Renderer& get_instance();
+
 	void create_window(const std::string& caption, unsigned int width, unsigned int height,
 					   unsigned int bitFormat, unsigned int FPS);
 
@@ -35,9 +32,9 @@ public:
 	void fps_end();
 
 	//resources call it from its constructors
-	void set_color_key(AnimationResource*);
-	void convert_format(AnimationResource*);
-	void convert_format(ImageResource*);
+	void set_color_key(AnimationResource&);
+	void convert_format(AnimationResource&);
+	void convert_format(ImageResource&);
 
 	unsigned int last_layer() const;
 

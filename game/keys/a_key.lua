@@ -7,3 +7,7 @@ do
 end else
 	print('A');
 end
+
+cm = ComponentManager.GetInstance();
+boy_pos = cm:GetPositionComponent("boy_pos");
+boy_pos:SetX(boy_pos:GetX() - 2);

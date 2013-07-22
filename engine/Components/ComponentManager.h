@@ -1,103 +1,53 @@
 #ifndef _COMPONENT_MANAGER_H_
 #define _COMPONENT_MANAGER_H_
 
+#include <string>
+#include <map>
 #include <memory>
 
-#include "..\BaseManager.h"
-#include "Position\Position.h"
 #include "Animation\Animation.h"
 #include "Image\Image.h"
 #include "Text\Text.h"
-
-template <typename T>
-class UpdateManager : public BaseMapManager<T>{
-public:
-	//calls update function for an entire map
-	void update(){
-		for (auto& it : BaseMapManager<T>::idMap) 
-			it.second->update();
-	}
-};
+#include "Position\Position.h"
+#include "Movement\Movement.h"
 
 class ComponentManager{
 public:
-	//creates singleton
-	static ComponentManager* get_instance(){
-		static ComponentManager singleton;
-		return &singleton;
-	}
+	//creates sigleton
+	static ComponentManager& get_instance();
 
-	template <typename T>
-	std::shared_ptr<T> create_component(const std::string& name){
-		auto& targetMap = get_map<std::shared_ptr<T>>();
-		try{
-			return targetMap.add(std::make_shared<T>(name, targetMap.get_id()), name);	 
-		}
-		catch (...){
-			//the component hasn't been loaded properly
-			return std::shared_ptr<T>();
-		}
-	}
+	void update_components();
 
-	template <typename T>
-	bool delete_component(const std::shared_ptr<T>& element){
-		auto& targetMap = get_map<std::shared_ptr<T>>();
-		return targetMap.remove(element);
-	}
+	Animation* create_animation_comp(const std::string& name);
+	Image* create_image_comp(const std::string& name);
+	Text* create_text_comp(const std::string& name);
+	Position* create_position_comp(const std::string& name);
+	Movement* create_movement_comp(const std::string& name);
 
-	template <typename T>
-	bool delete_component(const std::string& name){
-		auto& targetMap = get_map<std::shared_ptr<T>>();
-		return targetMap.remove(name);
-	}
+	Animation* get_animation_comp(const std::string& name);
+	Image* get_image_comp(const std::string& name);
+	Text* get_text_comp(const std::string& name);
+	Position* get_position_comp(const std::string& name);
+	Movement* get_movement_comp(const std::string& name);
 
-	template <typename T>
-	bool delete_component(unsigned int id){
-		auto& targetMap = get_map<std::shared_ptr<T>>();
-		return targetMap.remove(id);
-	}
+	void delete_animation_comp(const std::string& name);
+	void delete_image_comp(const std::string& name);
+	void delete_text_comp(const std::string& name);
+	void delete_position_comp(const std::string& name);
+	void delete_movement_comp(const std::string& name);
 
-	template <typename T>
-	std::shared_ptr<T> get_component(const std::string& name) const{
-		try{
-			return get_map<std::shared_ptr<T>>().get(name);
-		}
-		catch (...){
-			//the component is not in the maps
-			return std::shared_ptr<T>();
-		}
-	}
-
-	template <typename T>
-	std::shared_ptr<T> get_component(unsigned int id) const{
-		try{
-			return get_map<std::shared_ptr<T>>().get(id);
-		}
-		catch (...){
-			//the resource is not in the maps
-			return std::shared_ptr<T>();
-		}
-	}
-
-	template <typename T>
-	void update(){ get_map<std::shared_ptr<T>>().update(); }
-
-	void update_components(){
-		update<Position>();
-		update<Animation>();
-		update<Image>();
-		update<Text>();
-	}
+	void delete_animation_comp(Animation*);
+	void delete_image_comp(Image*);
+	void delete_text_comp(Text*);
+	void delete_position_comp(Position*);
+	void delete_movement_comp(Movement*);
 
 private:
-	//using mutable to make "get_map" a const function (because it is called by const "get_component")
-	mutable UpdateManager<std::shared_ptr<Position>> positionMap;
-	mutable UpdateManager<std::shared_ptr<Animation>> animationMap;
-	mutable UpdateManager<std::shared_ptr<Image>> imageMap;
-	mutable UpdateManager<std::shared_ptr<Text>> textMap;
-
-	//gets certain map depends on template argument
-	template <typename T> UpdateManager<T>& get_map() const;
+	std::map<std::string, std::unique_ptr<Animation> > animationMap;
+	std::map<std::string, std::unique_ptr<Image> > imageMap;
+	std::map<std::string, std::unique_ptr<Text> > textMap;
+	std::map<std::string, std::unique_ptr<Position> > positionMap;
+	std::map<std::string, std::unique_ptr<Movement> > movementMap;
 
 	//hide it (singleton)
 	ComponentManager() = default;
@@ -107,11 +57,5 @@ private:
 };
 
 typedef ComponentManager CM;
-
-//gets certain map depends on template argument
-template <> inline decltype(CM::positionMap)& CM::get_map() const{ return positionMap; }
-template <> inline decltype(CM::animationMap)& CM::get_map() const{ return animationMap; }
-template <> inline decltype(CM::imageMap)& CM::get_map() const{ return imageMap; }
-template <> inline decltype(CM::textMap)& CM::get_map() const{ return textMap; }
 
 #endif

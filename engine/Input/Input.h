@@ -9,21 +9,21 @@
 class Input{
 public:
 	//singleton
-	static Input* get_instance();
+	static Input& get_instance();
 
 	bool register_key(wchar_t key, std::string path);
-	bool key_pressed(wchar_t key);
-
+	bool key_pressed(wchar_t key) const;
 	bool handle();
 
 private:
 	std::map<wchar_t, std::string> keyMap;
 	Uint8* keyStates;
-	Lua* lua;
+	Lua& lua;
 
 	//hide it (singleton)
-	Input() = default;
+	Input(Lua& l) : lua(l) {}
 	~Input() = default;
+	Input() = delete;
 	Input(const Input&) = delete;
 	Input& operator=(const Input&) = delete;
 };

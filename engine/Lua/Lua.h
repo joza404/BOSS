@@ -7,9 +7,9 @@
 class Lua{
 public:
 	//creates singleton
-	static Lua* get_instance(){
+	static Lua& get_instance(){
 		static Lua singleton;
-		return &singleton;
+		return singleton;
 	}
 
 	//executes the script
