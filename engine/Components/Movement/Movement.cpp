@@ -7,17 +7,50 @@
 
 void Movement::update()
 {
+	if (stateChanged == true){
+		//set new velocity
+		Velocity tempVel = velocityMap[currentState];
+		vel.x = tempVel.x;
+		vel.y = tempVel.y;
+
+		//set new animation state
+		auto it = animationMap.find(currentState);
+		if (it != animationMap.end()){
+			//got it
+			animationComp->set_state(it->second);
+		}
+
+		stateChanged = false;
+	}
+
 	//if position component exists
 	if (positionComp != nullptr){
-		positionComp->set_x(positionComp->get_x() + xVel);
-		positionComp->set_y(positionComp->get_y() + yVel);
+		positionComp->add_x(vel.x);
+		positionComp->add_y(vel.y);
 	}
 }
 
-void Movement::set_velocity(int _xVel, int _yVel)
+void Movement::set_velocity(int xVel, int yVel)
 {
-	xVel = _xVel;
-	yVel = _yVel;
+	vel.x = xVel;
+	vel.y = yVel;
+}
+
+//allows you to bind xVel and yVel to the certain name
+void Movement::add_state(const std::string& stateName, int xVel, int yVel)
+{
+	velocityMap.insert( std::make_pair(stateName, Velocity(xVel, yVel)) );
+}
+void Movement::set_state(const std::string& stateName)
+{
+	currentState = stateName;
+	stateChanged = true;
+}
+
+void Movement::bind_animation_state(const std::string& stateName, const std::string& animationStateName)
+{
+	if (animationComp == nullptr) return;
+	animationMap.insert( std::make_pair(stateName, animationStateName) );
 }
 
 //set references to other components
@@ -28,6 +61,6 @@ void Movement::set_position(const std::string& pos)
 
 Movement::Movement(const std::string& _name) : BaseObject(_name)
 {
-	xVel = DEFAULT_X_VELOCITY;
-	yVel = DEFAULT_Y_VELOCITY;
+	vel.x = DEFAULT_X_VELOCITY;
+	vel.y = DEFAULT_Y_VELOCITY;
 }

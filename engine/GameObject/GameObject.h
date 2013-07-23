@@ -9,6 +9,11 @@
 #include "../Components/Text/Text.h"
 #include "../Components/Position/Position.h"
 #include "../Components/Movement/Movement.h"
+#include "../Components/FSM/FSM.h"
+#include "../Components/Script/Script.h"
+
+class FSM;
+class Script;
 
 class GameObject{
 public:
@@ -23,6 +28,9 @@ public:
 	Text* text = nullptr;
 	Position* position =  nullptr;
 	Movement* movement = nullptr;
+	FSM* fsm = nullptr;
+	Script* script = nullptr;
+
 
 	//check functions
 	bool animation_exists() { return animation != nullptr; }
@@ -30,6 +38,8 @@ public:
 	bool text_exists() { return text != nullptr; }
 	bool position_exists() { return position != nullptr; }
 	bool movement_exists() { return movement != nullptr; }
+	bool fsm_exists() { return fsm != nullptr; }
+	bool script_exists() { return script != nullptr; }
 
 	GameObject(const std::string&, const std::string&);
 	GameObject(GameObject&&);

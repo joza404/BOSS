@@ -13,6 +13,8 @@ void CM::update_components()
 	for(auto& it : textMap) it.second->update();
 	for(auto& it : positionMap) it.second->update();
 	for(auto& it : movementMap) it.second->update();
+	for(auto& it : fsmMap) it.second->update();
+	for(auto& it : scriptMap) it.second->update();
 }
 
 //creating components
@@ -46,6 +48,18 @@ Movement* CM::create_movement_comp(const std::string& name)
 	return movementMap.at(name).get();
 }
 
+FSM* CM::create_fsm_comp(const std::string& name, GameObject& go)
+{
+	fsmMap.insert( std::make_pair(name, std::unique_ptr<FSM>(new FSM(name, go))) );
+	return fsmMap.at(name).get();
+}
+
+Script* CM::create_script_comp(const std::string& name, GameObject& go, const luaponte::object& script)
+{
+	scriptMap.insert( std::make_pair(name, std::unique_ptr<Script>(new Script(name, go, script))) );
+	return scriptMap.at(name).get();
+}
+
 //getting components
 Animation* CM::get_animation_comp(const std::string& name)
 {
@@ -70,6 +84,16 @@ Position* CM::get_position_comp(const std::string& name)
 Movement* CM::get_movement_comp(const std::string& name)
 {
 	return movementMap.at(name).get();
+}
+
+FSM* CM::get_fsm_comp(const std::string& name)
+{
+	return fsmMap.at(name).get();
+}
+
+Script* CM::get_script_comp(const std::string& name)
+{
+	return scriptMap.at(name).get();
 }
 
 //deleting components
@@ -98,6 +122,16 @@ void CM::delete_movement_comp(const std::string& name)
 	movementMap.erase(name);
 }
 
+void CM::delete_fsm_comp(const std::string& name)
+{
+	fsmMap.erase(name);
+}
+
+void CM::delete_script_comp(const std::string& name)
+{
+	scriptMap.erase(name);
+}
+
 void CM::delete_animation_comp(Animation* animation)
 {
 	animationMap.erase(animation->name);
@@ -121,4 +155,14 @@ void CM::delete_position_comp(Position* position)
 void CM::delete_movement_comp(Movement* movement)
 {
 	movementMap.erase(movement->name);
+}
+
+void CM::delete_fsm_comp(FSM* fsm)
+{
+	fsmMap.erase(fsm->name);
+}
+
+void CM::delete_script_comp(Script* script)
+{
+	scriptMap.erase(script->name);
 }

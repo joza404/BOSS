@@ -10,7 +10,6 @@
 #include "Renderer\Renderer.h"
 #include "Lua\Lua.h"
 
-
 int main(int argc,char* argv[])
 {
 	setlocale(LC_ALL, "russian_russia.1251");

@@ -8,6 +8,8 @@ Components/Image/Image.cpp
 Components/Text/Text.cpp
 Components/Position/Position.cpp
 Components/Movement/Movement.cpp
+Components/FSM/FSM.cpp
+Components/Script/Script.cpp
 Components/ComponentManager.cpp
 
 Renderer/Renderer.cpp

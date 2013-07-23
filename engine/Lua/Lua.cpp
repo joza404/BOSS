@@ -14,13 +14,16 @@
 #include "../Resources/AnimationResource.h"
 #include "../Resources/ImageResource.h"
 #include "../Resources/FontResource.h"
+#include "../Resources/RigidBodyResource.h"
 
 #include "../Components/ComponentManager.h"
 #include "../Components/Animation/Animation.h"
 #include "../Components/Image/Image.h"
 #include "../Components/Position/Position.h"
 #include "../Components/Text/Text.h"
-#include "../Components/Movement.h"
+#include "../Components/Movement/Movement.h"
+#include "../Components/FSM/FSM.h"
+#include "../Components/Script/Script.h"
 
 //executes a script
 bool Lua::do_file(const std::string& path)
@@ -69,11 +72,15 @@ void Lua::bind_all()
 		.def_readwrite("text", &GameObject::text)
 		.def_readwrite("position", &GameObject::position)
 		.def_readwrite("movement", &GameObject::movement)
+		.def_readwrite("fsm", &GameObject::fsm)
+		.def_readwrite("script", &GameObject::script)
 		.def("AnimationExists", &GameObject::animation_exists)
 		.def("ImageExists", &GameObject::image_exists)
 		.def("TextExists", &GameObject::text_exists)
 		.def("PositionExists", &GameObject::position_exists)
 		.def("MovementExists", &GameObject::movement_exists)
+		.def("FSMExists", &GameObject::fsm_exists)
+		.def("ScriptExists", &GameObject::script_exists)
 	];
 
 	//bind game object manager
@@ -124,18 +131,33 @@ void Lua::bind_all()
 		.def("CreateImageComponent", &ComponentManager::create_image_comp)
 		.def("CreateTextComponent", &ComponentManager::create_text_comp)
 		.def("CreatePositionComponent", &ComponentManager::create_position_comp)
+		.def("CreateMovementComponent", &ComponentManager::create_movement_comp)
+		.def("CreateFSMComponent", &ComponentManager::create_fsm_comp)
+		.def("CreateScriptComponent", &ComponentManager::create_script_comp)
+
 		.def("GetAnimationComponent", &ComponentManager::get_animation_comp)
 		.def("GetImageComponent", &ComponentManager::get_image_comp)
 		.def("GetTextComponent", &ComponentManager::get_text_comp)
 		.def("GetPositionComponent", &ComponentManager::get_position_comp)
+		.def("GetMovementComponent", &ComponentManager::get_movement_comp)
+		.def("GetFSMComponent", &ComponentManager::get_fsm_comp)
+		.def("GetScriptComponent", &ComponentManager::get_script_comp)
+
 		.def("DestroyAnimationComponent", (void(ComponentManager::*) (const std::string&)) &ComponentManager::delete_animation_comp)
 		.def("DestroyImageComponent", (void(ComponentManager::*) (const std::string&)) &ComponentManager::delete_image_comp)
 		.def("DestroyTextComponent", (void(ComponentManager::*) (const std::string&)) &ComponentManager::delete_text_comp)
 		.def("DestroyPositionComponent", (void(ComponentManager::*) (const std::string&)) &ComponentManager::delete_position_comp)
+		.def("DestroyMovementComponent", (void(ComponentManager::*) (const std::string&)) &ComponentManager::delete_movement_comp)
+		.def("DestroyFSMComponent", (void(ComponentManager::*) (const std::string&)) &ComponentManager::delete_fsm_comp)
+		.def("DestroyScriptComponent", (void(ComponentManager::*) (const std::string&)) &ComponentManager::delete_script_comp)
+
 		.def("DestroyAnimationComponent", (void(ComponentManager::*) (Animation*)) &ComponentManager::delete_animation_comp)
 		.def("DestroyImageComponent", (void(ComponentManager::*) (Image*)) &ComponentManager::delete_image_comp)
 		.def("DestroyTextComponent", (void(ComponentManager::*) (Text*)) &ComponentManager::delete_text_comp)
 		.def("DestroyPositionComponent", (void(ComponentManager::*) (Position*)) &ComponentManager::delete_position_comp)
+		.def("DestroyMovementComponent", (void(ComponentManager::*) (Movement*)) &ComponentManager::delete_movement_comp)
+		.def("DestroyFSMComponent", (void(ComponentManager::*) (FSM*)) &ComponentManager::delete_fsm_comp)
+		.def("DestroyScriptComponent", (void(ComponentManager::*) (Script*)) &ComponentManager::delete_script_comp)
 		.scope[def("GetInstance", &ComponentManager::get_instance)]
 	];
 
@@ -147,6 +169,9 @@ void Lua::bind_all()
 		.def("SetY", &Position::set_y)
 		.def("GetX", &Position::get_x)
 		.def("GetY", &Position::get_y)
+		.def("AddX", &Position::add_x)
+		.def("AddY", &Position::add_y)
+
 	];
 
 	//bind the animation component
@@ -200,9 +225,28 @@ void Lua::bind_all()
 	module(state)
 	[
 		class_<Movement>("Movement")
+		.def("AddState", &Movement::add_state)
+		.def("SetState", &Movement::set_state)
+		.def("GetState", &Movement::get_state)
+		.def("SetAnimation", &Movement::set_animation)
+		.def("BindAnimationState", &Movement::bind_animation_state)
 		.def("SetVelocity", &Movement::set_velocity)
-		.def("SetPosition", (void(Text::*) (Position*)) &Movement::set_position)
-		.def("SetPosition", (void(Text::*) (const std::string&)) &Movement::set_position)
+		.def("SetPosition", (void(Movement::*) (Position*)) &Movement::set_position)
+		.def("SetPosition", (void(Movement::*) (const std::string&)) &Movement::set_position)
 		.def("UnsetPosition", &Movement::unset_position)
+	];
+
+	//bind the fsm component
+	module(state)
+	[
+		class_<FSM>("FSM")
+		.def("SetCurrentState", &FSM::set_current_state)
+		.def("ChangeState", &FSM::change_state)
+	];
+
+	//bind the script component
+	module(state)
+	[
+		class_<Script>("Script")
 	];
 }

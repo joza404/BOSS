@@ -14,4 +14,6 @@ GameObject::GameObject(const std::string& _typeName, const std::string& _objectN
  	text = go.text;
  	position = go.position;
  	movement = go.movement;
+ 	fsm = go.fsm;
+ 	script = go.script;
  }
