@@ -17,7 +17,6 @@ public:
 	void add_x(int _x) { x += _x; }
 	void add_y(int _y) { y += _y; }
 
-
 	Position(const std::string& name);
 	~Position() = default;
 	Position() = delete;

@@ -1,13 +1,6 @@
-if key_pressed('w') == true then
-do
-	print('A+W');
-end elseif key_pressed('s') == true then
-do
-	print('A+S');
-end else
-	print('A');
-end
+gom = GameObjectManager.GetInstance();
+player = gom:GetObject("Human1", "Player");
 
-cm = ComponentManager.GetInstance();
-boy_pos = cm:GetPositionComponent("boy_pos");
-boy_pos:SetX(boy_pos:GetX() - 2);
+if key_pressed('w') == false and key_pressed('s') == false then
+	player.movement:SetState("Walk_Left");
+end

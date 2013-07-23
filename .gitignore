@@ -2,5 +2,4 @@ bin/
 cmake/*
 !cmake/FindLua.cmake
 !cmake/FindLuaponte.cmake
-WhatToDo.txt
 tests/temp

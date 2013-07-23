@@ -1,7 +1,10 @@
-if key_pressed('a') == false and key_pressed('d') == false then
-	print('W');
-end
+gom = GameObjectManager.GetInstance();
+player = gom:GetObject("Human1", "Player");
 
-cm = ComponentManager.GetInstance();
-boy_pos = cm:GetPositionComponent("boy_pos");
-boy_pos:SetY(boy_pos:GetY() - 2);
+if key_pressed('a') == false and key_pressed('d') == false then
+	player.movement:SetState("Walk_Up");
+elseif key_pressed('a') == true then
+	player.movement:SetState("Walk_Up_Left");
+elseif key_pressed('d') == true then
+	player.movement:SetState("Walk_Up_Right");
+end

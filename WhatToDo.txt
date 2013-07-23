@@ -1,0 +1,7 @@
+1) Modify shitty resource parsers
+2) LOG FILE
+3) game object inheritance
+4) component x,y offset from position
+5) BindAnimationState with the same names
+6) key realesed functions
+7) delta time instead of rigid FPS
