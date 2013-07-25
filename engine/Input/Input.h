@@ -2,34 +2,45 @@
 #define _INPUT_H_
 
 #include <string>
-#include <map>
 #include <SDL.h>
-#include "../Lua/Lua.h"
+#include <list>
+#include <memory>
+#include <luaponte\luaponte.hpp>
+#include <luaponte\object.hpp>
+
+#define DEFAULT_INPUT_UPDATE_FREQUENCY 1
 
 class Input{
 public:
 	//singleton
 	static Input& get_instance();
 
-	bool register_key(wchar_t key, std::string path);
-	bool key_pressed(wchar_t key) const;
-	bool handle();
+	void register_key(const std::string&, const luaponte::object&, int);
+	bool key_pressed(const std::string&) const;
+	int set_update_frequency(int f) { updateFrequency = f; }
+	void update();
 
 private:
-	std::map<wchar_t, std::string> keyMap;
-	Uint8* keyStates;
-	Lua& lua;
+	struct InputKey{
+		const char key;
+		const luaponte::object function;
+		bool prevPressed = false;
+		int frameToWait = 1;
+		const int frequency;
+
+		InputKey(const char _key, const luaponte::object& _func, int _fr) : key(_key), function(_func), frequency(_fr) {} 
+	};
+
+	//using ptrs to blow over the move semantics (too lazy)
+	std::list< std::unique_ptr<InputKey> > keyList;
+	Uint8* keyStates = nullptr;
+	int updateFrequency = DEFAULT_INPUT_UPDATE_FREQUENCY;
 
 	//hide it (singleton)
-	Input(Lua& l) : lua(l) {}
+	Input() = default;
 	~Input() = default;
-	Input() = delete;
 	Input(const Input&) = delete;
 	Input& operator=(const Input&) = delete;
 };
-
-//these functions are used for luaponte binding
-bool bind_register_key(std::string, std::string);
-bool bind_key_pressed(std::string);
 
 #endif

@@ -1,19 +1,168 @@
 print("Initialization begins.")
 
-register_key('w', '..\\game\\keys\\w_key.lua');
-register_key('s', '..\\game\\keys\\s_key.lua');
-register_key('a', '..\\game\\keys\\a_key.lua');
-register_key('d', '..\\game\\keys\\d_key.lua');
---register_key('z', '..\\game\\keys\\z_key.lua');
---register_key('x', '..\\game\\keys\\x_key.lua');
---register_key('c', '..\\game\\keys\\c_key.lua');
---register_key('v', '..\\game\\keys\\v_key.lua');
---register_key(' ', '..\\game\\keys\\space_key.lua');
-
+input = Input.GetInstance();
 gom = GameObjectManager.GetInstance();
 cm = ComponentManager.GetInstance();
 rm = ResourceManager.GetInstance();
 
+W_Key = {}
+W_Key["Press"] = function()
+	player = gom:GetObject("Human1", "Player");
+	currentState = player.movement:GetState();
+	if string.find(currentState, "Idle") ~= nil then
+		player.movement:SetState("Walk_Up");
+	elseif currentState == "Walk_Left" then
+		player.movement:SetState("Walk_Up_Left");
+	elseif currentState == "Walk_Right" then
+		player.movement:SetState("Walk_Up_Right");
+	elseif currentState == "Walk_Down" then
+		player.movement:SetState("Walk_Up");
+	end
+end
+
+W_Key["Repeat"] = function()
+end
+
+W_Key["Release"] = function()
+	player = gom:GetObject("Human1", "Player");
+	currentState =  player.movement:GetState();
+	if currentState == "Walk_Up" then
+		player.movement:SetState("Idle_Up");
+	elseif currentState == "Walk_Up_Right" then
+		if input:KeyPressed('d') == true then
+			player.movement:SetState("Walk_Right");
+		else 
+			player.movement:SetState("Idle_Up_Right");
+		end
+	elseif currentState == "Walk_Up_Left" then
+		if input:KeyPressed('a') == true then
+			player.movement:SetState("Walk_Left");
+		else
+			player.movement:SetState("Idle_Up_Left");
+		end
+	end
+end
+
+S_Key = {}
+S_Key["Press"] = function()
+	player = gom:GetObject("Human1", "Player");
+	currentState = player.movement:GetState();
+	if string.find(currentState, "Idle") ~= nil then
+		player.movement:SetState("Walk_Down");
+	elseif currentState == "Walk_Left" then
+		player.movement:SetState("Walk_Down_Left");
+	elseif currentState == "Walk_Right" then
+		player.movement:SetState("Walk_Down_Right");
+	elseif currentState == "Walk_Up" then
+		player.movement:SetState("Walk_Down");
+	end 
+end
+
+S_Key["Repeat"] = function()
+end
+
+S_Key["Release"] = function()
+	player = gom:GetObject("Human1", "Player");
+	currentState = player.movement:GetState();
+	if currentState == "Walk_Down" then
+		player.movement:SetState("Idle_Down");
+	elseif currentState == "Walk_Down_Right" then
+		if input:KeyPressed('d') == true then
+			player.movement:SetState("Walk_Right");
+		else
+			player.movement:SetState("Idle_Down_Right");
+		end
+	elseif currentState == "Walk_Down_Left" then
+		if input:KeyPressed('a') == true then
+			player.movement:SetState("Walk_Left");
+		else
+			player.movement:SetState("Idle_Down_Left");
+		end
+	end
+end
+
+A_Key = {}
+A_Key["Press"] = function()
+	player = gom:GetObject("Human1", "Player");
+	currentState = player.movement:GetState();
+	if string.find(currentState, "Idle") ~= nil then
+		player.movement:SetState("Walk_Left");
+	elseif currentState == "Walk_Up" then
+		player.movement:SetState("Walk_Up_Left");
+	elseif currentState == "Walk_Down" then
+		player.movement:SetState("Walk_Down_Left");
+	elseif currentState == "Walk_Right" then
+		player.movement:SetState("Walk_Left");
+	end 
+end
+
+A_Key["Repeat"] = function()
+end
+
+A_Key["Release"] = function()
+	player = gom:GetObject("Human1", "Player");
+	currentState = player.movement:GetState();
+	if currentState == "Walk_Left" then
+		player.movement:SetState("Idle_Left");
+	elseif currentState == "Walk_Up_Left" then
+		if input:KeyPressed('w') == true then
+			player.movement:SetState("Walk_Up");
+		else
+			player.movement:SetState("Idle_Up_Left");
+		end
+	elseif currentState == "Walk_Down_Left" then
+		if input:KeyPressed('s') == true then
+			player.movement:SetState("Walk_Down");
+		else
+			player.movement:SetState("Idle_Down_Left");
+		end
+	end
+end
+
+D_Key = {}
+D_Key["Press"] = function()
+	player = gom:GetObject("Human1", "Player");
+	currentState = player.movement:GetState();
+	if string.find(currentState, "Idle") ~= nil then
+		player.movement:SetState("Walk_Right");
+	elseif currentState == "Walk_Up" then
+		player.movement:SetState("Walk_Up_Right");
+	elseif currentState == "Walk_Down" then
+		player.movement:SetState("Walk_Down_Right");
+	elseif currentState == "Walk_Left" then
+		player.movement:SetState("Walk_Right");
+	end 
+end
+
+D_Key["Repeat"] = function()
+end
+
+D_Key["Release"] = function()
+	player = gom:GetObject("Human1", "Player");
+	currentState = player.movement:GetState();
+	if currentState == "Walk_Right" then
+		player.movement:SetState("Idle_Right");
+	elseif currentState == "Walk_Up_Right" then
+		if input:KeyPressed('w') == true then
+			player.movement:SetState("Walk_Up");
+		else
+			player.movement:SetState("Idle_Up_Right");
+		end
+	elseif currentState == "Walk_Down_Right" then
+		if input:KeyPressed('s') == true then
+			player.movement:SetState("Walk_Down");
+		else
+			player.movement:SetState("Idle_Down_Right");
+		end
+	end
+end
+
+input:SetUpdateFrequency(3);
+input:RegisterKey('w', W_Key, 10000);
+input:RegisterKey('s', S_Key, 10000);
+input:RegisterKey('a', A_Key, 10000);
+input:RegisterKey('d', D_Key, 10000);
+ 
 --the space image
 rm:LoadImageResource("Resource_Space", "..\\game\\Space\\Space.info");
 
@@ -112,7 +261,6 @@ background = cm:CreateImageComponent("Background");
 background:SetResource("Resource_Space");
 
 gom:CreateObject("Human1", "Player");
-
 
 
 print("Initialization has completed.")

@@ -54,11 +54,14 @@ void Lua::bind_all()
 {
 	using namespace luaponte;
 
-	//bind the input global functions
+	//bind input
 	module(state)
 	[
-		def("register_key", &bind_register_key),
-		def("key_pressed", &bind_key_pressed)
+		class_<Input>("Input")
+		.scope[def("GetInstance", &Input::get_instance)]
+		.def("RegisterKey", &Input::register_key)
+		.def("KeyPressed", &Input::key_pressed)
+		.def("SetUpdateFrequency", &Input::set_update_frequency)
 	];
 
 	//bind game object

@@ -3,48 +3,52 @@
 
 Input& Input::get_instance()
 {
-	static Input singleton( Lua::get_instance() );
+	static Input singleton;
 	return singleton;
 }
 
-bool Input::register_key(wchar_t key, std::string path)
+void Input::register_key(const std::string& str, const luaponte::object& function, int frequency)
 {
-	keyMap[key] = path;
-	return true;
+	keyList.push_back( std::unique_ptr<InputKey>( new InputKey(str[0], function, frequency) ));
 }
 
-#include <iostream>
-//this function is used for luaponte binding
-bool bind_register_key(std::string key, std::string path)
+bool Input::key_pressed(const std::string& str) const
 {
-	Input& instance = Input::get_instance();
-	instance.register_key(key[0], path);
-	return true;
+	return keyStates[str[0]];
 }
 
-bool Input::key_pressed(wchar_t key) const
-{
-	return keyStates[key];
-}
-
-//this function is used for luaponte binding
-bool bind_key_pressed(std::string key)
-{
-	Input& instance = Input::get_instance();
-	return instance.key_pressed(key[0]);
-}
-
-bool Input::handle()
+void Input::update()
 {
 	SDL_PumpEvents();
 	keyStates = SDL_GetKeyState(nullptr);
 
+	static int frameToWait = updateFrequency;
+	if (--frameToWait > 0) return;
+	frameToWait = updateFrequency;
+
 	//pressed keys handling
-	for(auto& it : keyMap){
-		if (keyStates[it.first] == true){
-			lua.do_file(it.second);
+	for(auto& it : keyList){
+		//if key is pressed
+		if (keyStates[it->key] == 1){
+			//if it's not first time
+			if (it->prevPressed == true){
+				if (it->frameToWait > 0) it->frameToWait--;
+				else {
+					it->function["Repeat"]();
+					it->frameToWait = it->frequency - 1;
+				}
+			}
+			//if first time pressed
+			else{
+				it->function["Press"]();
+				it->frameToWait = it->frequency - 1;
+				it->prevPressed = true;
+			}
+		}
+		//if key is released
+		else if (it->prevPressed == true){
+			it->function["Release"]();
+			it->prevPressed = false;
 		}
 	}
-
-	return true;
 }

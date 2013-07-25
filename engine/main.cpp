@@ -32,7 +32,7 @@ int main(int argc,char* argv[])
 	//game loop
 	while (true){
 		renderer.fps_start();
-		input.handle();
+		input.update();
 		cm.update_components();
 		renderer.render();
 		renderer.fps_end();
